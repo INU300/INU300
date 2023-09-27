@@ -21,7 +21,7 @@ public class MemberService {
     public Long joinMember(MemberSaveDto memberSaveDto){
         /* 소분류 저장 로직*/
         memberSaveDto.setPassword(passwordEncoder.encode(memberSaveDto.getPassword()));
-        return memberRepository.save(memberRepository.save(memberSaveDto.toEntity())).getId();
+        return memberRepository.save(memberSaveDto.toEntity()).getId();
     }
 
 }
