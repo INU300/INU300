@@ -31,7 +31,7 @@ public class MemberSaveDto {
     public Member toEntity(){
         return Member.builder()
                 .email(email)
-                .name(password)
+                .password(password)
                 .name(name)
                 .school(school)
                 .department(department)
