@@ -24,5 +24,10 @@ public class LoginController {
         return "joinPage";
     }
 
+    @GetMapping("/home")
+    public String home(){
+        return "home";
+    }
+
 
 }
