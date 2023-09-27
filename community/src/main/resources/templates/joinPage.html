@@ -11,7 +11,7 @@
   <div class="row justify-content-center align-items-center min-vh-100">
     <div class="col-md-6">
       <h2 class="text-center">회원가입</h2>
-      <form action="/joinMem" method="post">
+      <form>
         <div class="form-group">
           <label for="email">이메일:</label>
           <input type="email" class="form-control" id="email" name="email" required>
@@ -36,11 +36,14 @@
           <label for="department">학과:</label>
           <input type="text" class="form-control" id="department" name="department" required>
         </div>
-
-        <button type="submit" class="btn btn-primary btn-block">가입하기</button>
       </form>
+      <button type="button" class="btn btn-primary btn-block" id="btn-join">가입하기</button>
     </div>
   </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/index.js"></script>
 </body>
 </html>
