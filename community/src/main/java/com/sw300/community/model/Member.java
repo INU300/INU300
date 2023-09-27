@@ -1,13 +1,14 @@
 package com.sw300.community.model;
 
 
-import com.sun.istack.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Entity
@@ -18,10 +19,12 @@ public class Member {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @Email
     private String email;
 
+    @NotNull
     private String password;
-
+    @NotNull
     private String name;
 
     private String school;
