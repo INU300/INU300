@@ -22,7 +22,7 @@ public class SecurityConfig  {
                 .headers().frameOptions().disable();
         http
                 .authorizeRequests()
-                .antMatchers("/login","/mainLogin","/join","/api/join","/index.js","/js/**","/css/**","/image/**","/h2-console/**").permitAll()
+                .antMatchers("/","/login","/mainLogin","/join","/api/join","/index.js","/js/**","/css/**","/image/**","/h2-console/**").permitAll()
                 .anyRequest().permitAll();
         http.formLogin()
                 .loginPage("/login")
