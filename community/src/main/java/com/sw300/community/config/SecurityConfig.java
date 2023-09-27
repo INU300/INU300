@@ -23,7 +23,7 @@ public class SecurityConfig  {
         http
                 .authorizeRequests()
                 .antMatchers("/login","/mainLogin","/join","/api/join","/index.js","/js/**","/css/**","/image/**","/h2-console/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
         http.formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/home");
