@@ -89,6 +89,32 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
-    console.log("script.............")
+    document.querySelector(".pagination").addEventListener("click", function (e) {
+        e.preventDefault()     // 리로드 방지
+        e.stopPropagation()    // 상위 태그 클릭 이벤트 방지
+
+        const target = e.target
+
+        if (target.tagName !== 'A') {
+            return
+        }
+
+        const num = target.getAttribute("data-num")
+
+        const formObj = document.querySelector("form")
+
+        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+
+        formObj.submit()
+
+    },false)
+
+    document.querySelector(".clearBtn").addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        self.location ='/board/list'
+
+    },false)
 
 </script>
