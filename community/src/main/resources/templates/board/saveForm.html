@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/saveForm.js"></script>
+    <!-- 외부 JavaScript 파일 참조 -->
+</head>
+<body>
+<form id="boardForm">
+    <label>Title:
+        <input type="text" name="title" required>
+    </label>
+    <label>Content:
+        <textarea name="content" required></textarea>
+    </label>
+    <label>Category:
+        <input type="text" name="category">
+    </label>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>
