@@ -1,8 +1,7 @@
 $(document).ready(function () {
     console.log("Document is ready");
-    console.log($("#classifyButton").length);  // 1이 출력되어야 합니다.
+    console.log($("#classifyButton").length);
 
-    // Function to classify the content using external API
     function classifyContent(title, content, callback) {
         $.ajax({
             type: 'POST',
@@ -26,7 +25,7 @@ $(document).ready(function () {
 
     $(document).on('click', '#classifyButton', function() {
 
-        console.log("classifyButton clicked");  // 이 부분 추가
+        console.log("classifyButton clicked");
 
         const title = $("input[name='title']").val();
         const content = $("textarea[name='content']").val();

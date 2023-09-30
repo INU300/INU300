@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.slf4j.Logger;  // 추가
-import org.slf4j.LoggerFactory;  // 추가
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class BoardApiController {
 
     private static final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
     private static final String OPENAI_API_KEY = "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";
-    private static final Logger logger = LoggerFactory.getLogger(BoardApiController.class);  // 로거 인스턴스 생성
+    private static final Logger logger = LoggerFactory.getLogger(BoardApiController.class);
 
 
     @Autowired
@@ -49,7 +49,6 @@ public class BoardApiController {
 
             JSONArray messages = new JSONArray();
 
-            // 원래의 내용만 API에 전달
             JSONObject contentMessage = new JSONObject();
             contentMessage.put("role", "user");
             contentMessage.put("content", "제목은 " + requestData.get("title") +
@@ -75,9 +74,9 @@ public class BoardApiController {
             String content = choices.getJSONObject(0).getJSONObject("message").getString("content").trim();
 
             String firstWord = content.split(" ")[0];
-            return ResponseEntity.ok(firstWord); // 받아온 응답 그대로 반환
+            return ResponseEntity.ok(firstWord);
         } catch (Exception e) {
-            logger.error("Error while classifying content:", e);  // 오류 로깅
+            logger.error("Error while classifying content:", e);
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
