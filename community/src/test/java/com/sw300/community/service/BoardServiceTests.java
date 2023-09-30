@@ -24,8 +24,8 @@ public class BoardServiceTests {
     public void testWritePost() {
 
         Board board = Board.builder()
-                .title("Sample Title...")
-                .content("Sample Content...")
+                .title("한글 Title...")
+                .content("한글 Content...")
                 .build();
         boardService.writePost(board);
 
