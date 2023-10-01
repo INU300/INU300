@@ -56,7 +56,7 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.status === 200) {
                     alert('게시글이 저장되었습니다.');
-                    window.location.href = '/';
+                    window.location.href = '/detail.html';
                 } else {
                     alert('오류가 발생했습니다.');
                 }
