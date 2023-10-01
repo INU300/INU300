@@ -63,4 +63,50 @@ $(document).ready(function () {
             }
         });
     });
+
+    $(document).on('click', '#saveCommentButton', function() {
+        const boardId = $('.post-container').data('id');
+        const commentContent = $("#commentContent").val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/api/board/' + boardId + '/reply',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({
+                boardId: boardId,
+                content: commentContent
+            }),
+            success: function (response) {
+                if (response.status === 200) {
+                    // 댓글을 목록에 추가
+                    $('#commentsList').append(
+                        '<li>' + commentContent + ' <button class="deleteCommentButton" data-id="'
+                        + response.data.replyId + '">삭제</button></li>'
+                    );
+                    $("#commentContent").val('');  // 댓글 입력란 초기화
+                } else {
+                    alert('오류가 발생했습니다.');
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.deleteCommentButton', function() {
+        const replyId = $(this).data('id');
+        const $thisComment = $(this).parent();
+
+        $.ajax({
+            type: 'DELETE',
+            url: '/api/board/reply/' + replyId,
+            success: function (response) {
+                if (response.status === 200) {
+                    alert('댓글이 삭제되었습니다.');
+                    $thisComment.remove();
+                } else {
+                    alert('오류가 발생했습니다.');
+                }
+            }
+        });
+    });
+
 });

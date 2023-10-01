@@ -1,5 +1,10 @@
+/**
+ * board.js의 요청을 받는 클래스
+ */
+
 package com.sw300.community.controller;
 
+import com.sw300.community.dto.ReplySaveRequestDto;
 import com.sw300.community.dto.ResponseDto;
 import com.sw300.community.model.Board;
 import com.sw300.community.service.BoardService;
@@ -28,11 +33,10 @@ public class BoardApiController {
     private static final String OPENAI_API_KEY = "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";
     private static final Logger logger = LoggerFactory.getLogger(BoardApiController.class);
 
-
     @Autowired
     private BoardService boardService;
 
-    @ApiOperation("글 작성")
+//    @ApiOperation("글 작성")
     @PostMapping("api/board")
     public ResponseDto<Integer> save(@RequestBody Board board) {
         boardService.writePost(board);
@@ -81,19 +85,31 @@ public class BoardApiController {
         }
     }
 
-    @ApiOperation("글 삭제")
+//    @ApiOperation("글 삭제")
     @DeleteMapping("/api/board/{id}")
     public ResponseDto<Integer> deleteById(@PathVariable int id) {
         boardService.deletePost(id);
         return new ResponseDto<>(HttpStatus.OK, 1);
     }
 
-    @ApiOperation("글 수정")
+//    @ApiOperation("글 수정")
     @PutMapping("/api/board/{id}")
     public ResponseDto<Integer> update(@PathVariable int id, @RequestBody Board board) {
         boardService.updatePost(id,board);
         return new ResponseDto<>(HttpStatus.OK, 1);
     }
 
+    @PostMapping("/api/board/{boardId}/reply")
+    public ResponseDto<Integer> saveReply(@PathVariable Long boardId, @RequestBody ReplySaveRequestDto reply) {
+        reply.setBoardId(boardId);
+        boardService.writeReply(reply);
+        return new ResponseDto<>(HttpStatus.OK, 1);
+    }
+
+    @DeleteMapping("/api/board/reply/{replyId}")
+    public ResponseDto<Integer> deleteReply(@PathVariable long replyId) {
+        boardService.deleteReply(replyId);
+        return new ResponseDto<>(HttpStatus.OK, 1);
+    }
 
 }

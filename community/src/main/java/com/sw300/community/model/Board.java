@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,7 +27,16 @@ public class Board {
 
     private String content;
 
+    @Column(nullable = false, length = 20)
     private String category;
+
+//    @ManyToOne(fetch = FetchType.LAZY) // Many = Board, One = User
+//    @JoinColumn(name = "userId")
+//    private User user;
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @OrderBy("id desc")
+    private List<Reply> replyList;
 
     @CreationTimestamp
     private Timestamp createDate;
