@@ -33,7 +33,8 @@ public class BoardService {
         Pageable pageable = pageRequestDto.getPageable("id");
 
         //Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
-        Page<Board> result = boardRepository.findAll(pageable);
+        //Page<Board> result = boardRepository.findAll(pageable);
+        Page<Board> result = boardRepository.findByCategory(pageRequestDto.getCategory(), pageable);
 
         List<Board> dtoList = result.getContent();
 

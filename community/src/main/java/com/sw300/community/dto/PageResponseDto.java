@@ -10,6 +10,7 @@ import java.util.List;
 @ToString
 public class PageResponseDto<E> {
 
+    private String category;
     private int page;
     private int size;
     private int total;
@@ -33,6 +34,7 @@ public class PageResponseDto<E> {
             return;
         }
 
+        this.category = pageRequestDto.getCategory();
         this.page = pageRequestDto.getPage();
         this.size = pageRequestDto.getSize();
 
