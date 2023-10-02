@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>로그인</title>
+  <!-- 부트스트랩 CSS 링크 추가 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<!-- 부트스트랩 그리드 시스템을 활용하여 로그인 폼 가운데 정렬 -->
+<div class="container">
+  <div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-md-6">
+      <h2 class="text-center">300</h2>
+      <form action="/login" method="post">
+        <div class="form-group">
+          <label for="username">이메일:</label>
+          <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">비밀번호:</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">로그인</button>
+      </form>
+
+      <p class="text-center">계정이 없으신가요? <a href="/join">회원가입</a></p>
+      <p class="text-center"><a href="/searchId">아이디 찾기</a> | <a href="/searchPassword">비밀번호 찾기</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/index.js"></script>
+</body>
+</html>
