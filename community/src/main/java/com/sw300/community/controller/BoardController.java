@@ -20,11 +20,11 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
-//    @GetMapping({"", "/"})
-//    public String index(Model model, @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-//        model.addAttribute("boards", boardService.getPostList(pageable));
-//        return "index";
-//    }
+    @GetMapping({"", "/"})
+    public String index(Model model, @PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        model.addAttribute("boards", boardService.getPostList(pageable));
+        return "index";
+    }
 
     @GetMapping("/board/saveForm")
     public String saveForm() {
