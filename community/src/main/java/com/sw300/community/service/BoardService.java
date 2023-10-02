@@ -10,6 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.sw300.community.dto.PageRequestDto;
+import com.sw300.community.dto.PageResponseDto;
+import java.util.List;
+
 
 @Service
 public class BoardService {
@@ -30,8 +34,24 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    public Page<Board> getPostList(Pageable pageable) {
-        return boardRepository.findAll(pageable);
+    public PageResponseDto<Board> getPostList(PageRequestDto pageRequestDto) {
+        String[] types = pageRequestDto.getTypes();
+        String keyword = pageRequestDto.getKeyword();
+        Pageable pageable = pageRequestDto.getPageable("id");
+
+        //Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
+        Page<Board> result = boardRepository.findAll(pageable);
+
+        List<Board> dtoList = result.getContent();
+
+        return PageResponseDto.<Board>withAll()
+                .pageRequestDto(pageRequestDto)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
+        //return boardRepository.findAll(pageable);
+//    public Page<Board> getPostList(Pageable pageable) {
+//        return boardRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
