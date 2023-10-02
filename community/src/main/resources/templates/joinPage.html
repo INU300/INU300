@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>회원가입</title>
+  <!-- 부트스트랩 CSS 링크 추가 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<!-- 부트스트랩 그리드 시스템을 활용하여 회원가입 폼 가운데 정렬 -->
+<div class="container">
+  <div class="row justify-content-center align-items-center min-vh-100">
+    <div class="col-md-6">
+      <h2 class="text-center">회원가입</h2>
+      <form>
+        <div class="form-group">
+          <label for="email">이메일:</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">비밀번호:</label>
+          <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">이름:</label>
+          <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="school">학교:</label>
+          <input type="text" class="form-control" id="school" name="school" required>
+        </div>
+
+        <div class="form-group">
+          <label for="department">학과:</label>
+          <input type="text" class="form-control" id="department" name="department" required>
+        </div>
+      </form>
+      <button type="button" class="btn btn-primary btn-block" id="btn-join">가입하기</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/index.js"></script>
+</body>
+</html>

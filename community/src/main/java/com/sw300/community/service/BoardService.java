@@ -1,7 +1,3 @@
-/**
- * board.js의 요청을 실제로 처리하는 서비스 클래스
- */
-
 package com.sw300.community.service;
 
 import com.sw300.community.dto.ReplySaveRequestDto;
@@ -12,7 +8,6 @@ import com.sw300.community.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
