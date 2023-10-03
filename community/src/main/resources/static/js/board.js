@@ -64,6 +64,34 @@ $(document).ready(function () {
         });
     });
 
+    function handleVote(boardId, voteType) {
+        const voteUrl = `/api/board/${boardId}/${voteType}`;
+        $.ajax({
+            type: 'POST',
+            url: voteUrl,
+            success: function (response) {
+                if (response.status === 200 && response.data === 1) {
+                    const countElement = voteType === 'upVote' ? "#upVoteCount" : "#downVoteCount";
+                    const currentCount = parseInt($(countElement).text(), 10);
+                    $(countElement).text(currentCount + 1);
+                    alert(voteType === 'upVote' ? "추천하였습니다." : "비추천하였습니다.");
+                } else {
+                    alert('이미 투표하셨습니다.');
+                }
+            }
+        });
+    }
+
+    $(document).on('click', '#upVoteButton', function() {
+        const boardId = $('.post-container').data('id');
+        handleVote(boardId, 'upVote');
+    });
+
+    $(document).on('click', '#downVoteButton', function() {
+        const boardId = $('.post-container').data('id');
+        handleVote(boardId, 'downVote');
+    });
+
     $(document).on('click', '#saveCommentButton', function() {
         const boardId = $('.post-container').data('id');
         const commentContent = $("#commentContent").val();
