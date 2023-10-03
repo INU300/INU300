@@ -1,6 +1,7 @@
 package com.sw300.community.service;
 
 import com.sw300.community.dto.ReplySaveRequestDto;
+import com.sw300.community.dto.ResponseDto;
 import com.sw300.community.model.Board;
 import com.sw300.community.model.Reply;
 import com.sw300.community.repository.BoardRepository;
@@ -8,6 +9,7 @@ import com.sw300.community.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.sw300.community.dto.PageRequestDto;
@@ -69,6 +71,22 @@ public class BoardService {
         Board board = boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("failed to load post : cannot post id"));
         board.setTitle(requestBoard.getTitle());
         board.setContent(requestBoard.getContent());
+    }
+
+    @Transactional
+    public ResponseDto<Integer> vote(Long boardId, String voteType) {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("failed to load post : cannot find post id"));
+
+        if ("upVote".equals(voteType)) {
+            board.setUpVotes(board.getUpVotes() + 1);
+        } else if ("downVote".equals(voteType)) {
+            board.setDownVotes(board.getDownVotes() + 1);
+        } else {
+            return new ResponseDto<>(HttpStatus.BAD_REQUEST, -1);  // Unsupported vote type
+        }
+
+        boardRepository.save(board);
+        return new ResponseDto<>(HttpStatus.OK, 1);  // Success
     }
 
     @Transactional

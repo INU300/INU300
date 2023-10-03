@@ -99,6 +99,11 @@ public class BoardApiController {
         return new ResponseDto<>(HttpStatus.OK, 1);
     }
 
+    @PostMapping("api/board/{boardId}/{voteType}")
+    public ResponseDto<Integer> vote(@PathVariable Long boardId, @PathVariable String voteType) {
+        return boardService.vote(boardId, voteType);
+    }
+
     @PostMapping("/api/board/{boardId}/reply")
     public ResponseDto<Integer> saveReply(@PathVariable Long boardId, @RequestBody ReplySaveRequestDto reply) {
         reply.setBoardId(boardId);
@@ -111,5 +116,6 @@ public class BoardApiController {
         boardService.deleteReply(replyId);
         return new ResponseDto<>(HttpStatus.OK, 1);
     }
+
 
 }

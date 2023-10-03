@@ -14,6 +14,14 @@
     <p th:text="'Category: ' + ${boards.category}">Category: Category goes here</p>
     <p th:text="${boards.content}">Content goes here</p>
 
+    <div class="vote-section">
+        <button id="upVoteButton">추천</button>
+        <span id="upVoteCount" th:text="${boards.upVotes}">0</span>
+
+        <button id="downVoteButton">비추천</button>
+        <span id="downVoteCount" th:text="${boards.downVotes}">0</span>
+    </div>
+
     <div class="comment-section">
         <h3>댓글</h3>
         <textarea id="commentContent" placeholder="댓글을 입력하세요"></textarea>
@@ -25,6 +33,7 @@
             </li>
         </ul>
     </div>
+
 </div>
 </body>
 </html>

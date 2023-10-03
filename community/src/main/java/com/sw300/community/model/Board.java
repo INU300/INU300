@@ -22,6 +22,10 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+//    @ManyToOne(fetch = FetchType.LAZY) // Many = Board, One = User
+//    @JoinColumn(name = "userId")
+//    private Uers user;
+
     @Column(nullable = false, length = 100)
     private String title;
 
@@ -30,9 +34,8 @@ public class Board {
     @Column(nullable = false, length = 20)
     private String category;
 
-//    @ManyToOne(fetch = FetchType.LAZY) // Many = Board, One = User
-//    @JoinColumn(name = "userId")
-//    private User user;
+    private int upVotes;   // 추천 수
+    private int downVotes; // 비추천 수
 
     @OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @OrderBy("id desc")
