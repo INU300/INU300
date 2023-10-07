@@ -10,6 +10,7 @@ var main={
             email: $('#email').val(),
             password: $('#password').val(),
             name: $('#name').val(),
+            nickname: $('#nickname').val(),
             school: $('#school').val(),
             department: $('#department').val()
 
