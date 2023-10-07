@@ -11,7 +11,7 @@
 <body>
 <div class="post-container" th:data-id="${boards.id}">
     <h2 th:text="${boards.title}">Title goes here</h2>
-    <p th:text="'Category: ' + ${boards.category}">Category: Category goes here</p>
+    <p th:text="'Category: ' + ${boards.category.getName()}">Category: Category goes here</p>
     <p th:text="${boards.content}">Content goes here</p>
 
     <div class="vote-section">

@@ -52,9 +52,6 @@ public class BoardService {
                 .dtoList(dtoList)
                 .total((int)result.getTotalElements())
                 .build();
-        //return boardRepository.findAll(pageable);
-//    public Page<Board> getPostList(Pageable pageable) {
-//        return boardRepository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)

@@ -7,9 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -38,6 +41,7 @@ public class CategoryService {
     public static final String LAST_VISIT_TIME_SESSION_KEY = "lastVisitTime";
     public static final long VISIT_INTERVAL_MS = TimeUnit.HOURS.toMillis(1);
 
+    @Transactional
     public void incrementDailyVisitors(Long cno, HttpSession session) {
 
         // 카테고리별 세션 키 생성
@@ -60,6 +64,25 @@ public class CategoryService {
 
                 // 엔티티를 저장하여 방문자 수를 업데이트
                 categoryRepository.save(category);
+            }
+        }
+    }
+
+    // 일정 주기로 실행할 스케줄링 메서드
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+    @Transactional
+    public void resetDailyVisitors() {
+        // 현재 시간을 체크하여 자정에만 실행되도록 함
+        LocalTime currentTime = LocalTime.now();
+        if (currentTime.getHour() == 0 && currentTime.getMinute() == 0) {
+            // 카테고리 테이블의 dailyVisitors 값을 모두 0으로 초기화
+            List<Category> categories = categoryRepository.findAll();
+            if (categories.isEmpty()) {
+            } else {
+                for (Category category : categories) {
+                    category.changeDailyVisiters(0);
+                }
+                categoryRepository.saveAll(categories);
             }
         }
     }

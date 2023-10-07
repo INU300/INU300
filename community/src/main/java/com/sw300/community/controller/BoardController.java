@@ -48,7 +48,7 @@ public class BoardController {
 
     @GetMapping("/board/{id}")
     public String getPost(Model model, @PathVariable Long id, PageRequestDto pageRequestDto) {
-        model.addAttribute("board", boardService.getPost(id));
+        model.addAttribute("boards", boardService.getPost(id));
         return "board/detail";
     }
 
@@ -57,5 +57,4 @@ public class BoardController {
         model.addAttribute("boards", boardService.getPost(id));
         return "/board/updateForm";
     }
-
 }

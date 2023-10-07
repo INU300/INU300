@@ -49,6 +49,10 @@
 
     function printCategories() {
         categoryList.forEach((category, index) => {
+            const span = document.createElement('span');
+            span.innerText= " " + (index + 1) +". ";
+            boardList.appendChild(span);
+
             const button = document.createElement('button');
             button.textContent = `${category.name} : ${category.dailyVisitors}`;
             button.addEventListener('click', () => {
