@@ -22,11 +22,14 @@ public class SecurityConfig  {
                 .headers().frameOptions().disable();
         http
                 .authorizeRequests()
-                .antMatchers("/","/login","/mainLogin","/join","/api/join","/index.js","/js/**","/css/**","/image/**","/h2-console/**").permitAll()
+                .antMatchers("/","/login","/mainLogin","/join","/api/**","/index.js","/js/**","/css/**","/image/**","/h2-console/**").permitAll()
                 .anyRequest().permitAll();
         http.formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/home");
+        http.logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/");
         return http.build();
     }
 
