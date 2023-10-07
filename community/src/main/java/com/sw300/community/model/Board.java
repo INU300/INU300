@@ -1,9 +1,7 @@
 package com.sw300.community.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -31,8 +29,14 @@ public class Board {
 
     private String content;
 
-    @Column(nullable = false, length = 20)
+/*    @Column(nullable = false, length = 20)
     private String category;
+    -> Category로 변경
+*/
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private int upVotes;   // 추천 수
     private int downVotes; // 비추천 수
@@ -42,6 +46,7 @@ public class Board {
     private List<Reply> replyList;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createDate;
 
 }

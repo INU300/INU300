@@ -18,7 +18,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("sw300.community"))
+                .apis(RequestHandlerSelectors.basePackage("com.sw300.community"))
                 .paths(PathSelectors.any())
                 .build().apiInfo(apiInfo());
     }
