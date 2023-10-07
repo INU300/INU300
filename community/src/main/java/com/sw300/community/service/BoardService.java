@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.sw300.community.dto.PageRequestDto;
 import com.sw300.community.dto.PageResponseDto;
+
 import java.util.List;
 
 
@@ -41,9 +42,8 @@ public class BoardService {
         String keyword = pageRequestDto.getKeyword();
         Pageable pageable = pageRequestDto.getPageable("id");
 
-        //Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
-        //Page<Board> result = boardRepository.findAll(pageable);
-        Page<Board> result = boardRepository.findByCategory(pageRequestDto.getCno(), pageable);
+        Page<Board> result = boardRepository.searchAll(pageRequestDto.getCno(), types, keyword, pageable);
+        //Page<Board> result = boardRepository.findByCategory(pageRequestDto.getCno(), pageable);
 
         List<Board> dtoList = result.getContent();
 
