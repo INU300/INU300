@@ -3,14 +3,13 @@ package com.sw300.community.service;
 import com.sw300.community.dto.PageRequestDto;
 import com.sw300.community.dto.PageResponseDto;
 import com.sw300.community.model.Board;
-import org.assertj.core.api.Assertions;
+import com.sw300.community.model.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 
-import javax.transaction.Transactional;
-import java.util.List;
+import java.util.stream.IntStream;
 
 @SpringBootTest
 //@Transactional
@@ -23,13 +22,20 @@ public class BoardServiceTests {
     @Commit
     public void testWritePost() {
 
-        Board board = Board.builder()
-                .title("한글 Title...")
-                .content("한글 Content...")
-                .build();
-        boardService.writePost(board);
+        Long cno = 3L;
 
-        System.out.println("testWritePost: " + board);
+        Category category = Category.builder().cno(cno).build();
+
+        IntStream.rangeClosed(1,100).forEach(i -> {
+            Board board = Board.builder()
+                    .title("썰게시판 제목" + i)
+                    .content("썰게시판 내용" + i)
+                    .category(category)
+                    .build();
+            boardService.writePost(board);
+        });
+
+        //System.out.println("testWritePost: " + board);
     }
 
     @Test

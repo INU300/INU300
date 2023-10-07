@@ -17,6 +17,8 @@ import java.net.URLEncoder;
 @NoArgsConstructor
 public class PageRequestDto {
 
+    private Long cno;    // category id
+
     @Builder.Default
     private int page = 1;   // 현재 페이지
 
