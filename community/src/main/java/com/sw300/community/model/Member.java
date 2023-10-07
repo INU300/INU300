@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Entity
@@ -27,20 +28,37 @@ public class Member {
     @NotNull
     private String name;
 
-    private String school;
+    @NotNull
+    private String nickname;
 
-    private String department;
+    private String school;// 학교
 
-    private String subclass;
+    private String department;// 학과
+
+    private String subclass;// 소분류
+
+    private int upVotes;   // 추천 수
+    private int downVotes; // 비추천 수
+
+
+    @ElementCollection(fetch =  FetchType.LAZY)
+    private List<String> bookmark;
 
     @Builder
-    public Member(String email, String password,String name, String school, String department, String subclass){
+    public Member(String email, String password,String name, String nickname, String school, String department, String subclass, List<String> bookmark){
         this.email = email;
         this.password = password;
         this.name = name;
+        this.nickname = nickname;
         this.school = school;
         this.department = department;
         this.subclass = subclass;
+        this.bookmark = bookmark;
     }
+
+    public void changeNickname(String newNickname){
+        this.nickname = newNickname;
+    }
+    public void changePassword(String password){this.password = password;}
 
 }
