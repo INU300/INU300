@@ -1,5 +1,6 @@
 package com.sw300.community.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,9 +27,12 @@ public class Board {
 
     private String content;
 
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createDate;
 
 }

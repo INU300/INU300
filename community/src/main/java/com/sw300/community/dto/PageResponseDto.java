@@ -10,7 +10,7 @@ import java.util.List;
 @ToString
 public class PageResponseDto<E> {
 
-    private String category;
+    private Long cno;   // category id
     private int page;
     private int size;
     private int total;
@@ -34,7 +34,7 @@ public class PageResponseDto<E> {
             return;
         }
 
-        this.category = pageRequestDto.getCategory();
+        this.cno = pageRequestDto.getCno();
         this.page = pageRequestDto.getPage();
         this.size = pageRequestDto.getSize();
 
