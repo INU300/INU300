@@ -56,4 +56,23 @@ public class MemberService {
         return mem.getId();
     }
 
+    @Transactional
+    public boolean searchPassword(String email, String name){
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+        if(!member.getName().equals(name)){
+            new IllegalArgumentException("회원의 이름이 다릅니다.");
+            return false;
+        }
+        else
+            return true;
+
+    }
+
+    @Transactional
+    public Long newPassword(String email,String newPassword){
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
+        member.changePassword(passwordEncoder.encode(newPassword));
+        return member.getId();
+    }
+
 }
