@@ -1,26 +1,39 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Layout page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>글 보기</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/board.js"></script>
+    <link rel="stylesheet" href="/css/styles2.css">
 </head>
 <body>
+<div class="post-container" th:data-id="${boards.id}">
+    <h2 th:text="${boards.title}">Title goes here</h2>
+    <p th:text="'Category: ' + ${boards.category}">Category: Category goes here</p>
+    <p th:text="${boards.content}">Content goes here</p>
 
-<div>
-    <h3>Sample Layout Header</h3>
+    <div class="vote-section">
+        <button id="upVoteButton">추천</button>
+        <span id="upVoteCount" th:text="${boards.upVotes}">0</span>
+
+        <button id="downVoteButton">비추천</button>
+        <span id="downVoteCount" th:text="${boards.downVotes}">0</span>
+    </div>
+
+    <div class="comment-section">
+        <h3>댓글</h3>
+        <textarea id="commentContent" placeholder="댓글을 입력하세요"></textarea>
+        <button id="saveCommentButton">댓글 저장</button>
+        <ul id="commentsList">
+            <li th:each="reply : ${replies}">
+                <span th:text="${reply.content}"></span>
+                <button class="deleteCommentButton" th:data-id="${reply.id}">삭제</button>
+            </li>
+        </ul>
+    </div>
+
 </div>
-
-<div layout:fragment="content">
-    <p>[[${board}]]</p>
-</div>
-
-<div>
-    <h3>Sample Layout Footer</h3>
-</div>
-
-<th:block layout:fragment="script" >
-
-</th:block>
-
 </body>
 </html>
