@@ -21,9 +21,11 @@
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/home}">메인화면</a>
         </div>
         <div class="list-group list-group-flush">
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/board/list(cno=1)}">유머게시판</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:each="category:${categoryList}" th:href="@{/board/list(cno=${category.cno})}">[[${category.name}]]</a>
+
+            <!--<a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/board/list(cno=1)}">유머게시판</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/board/list(cno=2)}">고민상담게시판</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/board/list(cno=3)}">썰게시판</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/board/list(cno=3)}">썰게시판</a>-->
         </div>
     </div>
     <!-- Page content wrapper-->
@@ -36,9 +38,8 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
                         <li class="nav-item active"><a class="nav-link" th:href="@{/board/saveForm}">글 작성</a></li>
-                        <li class="nav-item active"><a class="nav-link" th:href="@{/}">로그인</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">(닉네임)</a>
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">[[${member.nickname}]]</a>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="/myPage">내 정보</a>
                                 <a class="dropdown-item" href="#!">쪽지</a>
