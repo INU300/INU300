@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -49,6 +50,25 @@ public class MemberController {
         return "myPage";
     }
 
+    @GetMapping("/searchId")
+    public String searchId(){
+        return "searchIdForm";
+    }
+
+    @GetMapping("/searchPassword")
+    public String searchPassword(){
+        return "searchPasswordForm";
+    }
+
+    @PostMapping("/searchPassword")
+    public String changePassword(@RequestParam("email")String email,@RequestParam("name") String name, Model model){
+        if(memberService.searchPassword(email,name)){
+            model.addAttribute("email",email);
+            return "newPasswordForm";
+        }
+        else
+            return "searchPasswordForm";
+    }
 
 
 

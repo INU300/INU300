@@ -5,6 +5,7 @@ import com.sw300.community.model.Member;
 import com.sw300.community.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.parameters.P;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,8 +34,14 @@ public class MemberApiController {
     @PostMapping("/api/changePassword")
     public Long changePassword(@RequestBody Map<String,String> password,Principal principal){
         Member member = this.memberService.getMember(principal.getName());
-        System.out.println(password.get("currentPassword"));
-        System.out.println(password.get("newPassword"));
         return memberService.changePassword(member.getId(),password.get("currentPassword"),password.get("newPassword"));
     }
+
+    @PostMapping("/api/newPassword")
+    public Long newPassword(@RequestBody Map<String,String> inform){
+        System.out.println(inform.get("email"));
+        return memberService.newPassword(inform.get("email"),inform.get("newPassword"));
+    }
+
+
 }
