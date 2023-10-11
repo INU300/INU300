@@ -47,7 +47,7 @@ public class CategoryService {
         // 카테고리별 세션 키 생성
         String categorySessionKey = LAST_VISIT_TIME_SESSION_KEY + "_" + cno;
 
-        // 카테고리별 세션에서 이전 방문 시간을 가져옵니다.
+        // 카테고리별 세션에서 이전 방문 시간을 가져옴
         Long lastVisitTime = (Long) session.getAttribute(categorySessionKey);
         long currentTimeMillis = System.currentTimeMillis();
 
