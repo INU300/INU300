@@ -43,7 +43,7 @@ public class MemberController {
 
     @GetMapping("/myPage")
     public String myPage(Model model, Principal principal){
-        Member member = this.memberService.getMember(principal.getName());
+        Member member = memberService.getMember(principal.getName());
         MemberInformationDto memDto = new MemberInformationDto(member.getEmail(),member.getName(),member.getNickname(),member.getSchool(),member.getDepartment(),
                 member.getSubclass(),member.getBookmark());
         model.addAttribute("mem",memDto);
