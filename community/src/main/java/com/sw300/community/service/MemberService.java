@@ -2,13 +2,18 @@ package com.sw300.community.service;
 
 
 import com.sw300.community.dto.MemberSaveDto;
+import com.sw300.community.model.Category;
 import com.sw300.community.model.Member;
+import com.sw300.community.model.MemberCategory;
+import com.sw300.community.repository.CategoryRepository;
+import com.sw300.community.repository.MemberCategoryRepository;
 import com.sw300.community.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +23,9 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final MemberCategoryRepository memberCategoryRepository;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public Long joinMember(MemberSaveDto memberSaveDto){
@@ -73,6 +81,30 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 회원이 존재하지 않습니다."));
         member.changePassword(passwordEncoder.encode(newPassword));
         return member.getId();
+    }
+
+    @Transactional
+    public void viewAddCount(Long cNo, String email){
+        Category category = categoryRepository.findById(cNo).orElseThrow();
+        Member member = memberRepository.findByEmail(email).orElseThrow();
+
+        List<MemberCategory> favorite = member.getFavorite();
+
+
+        boolean hasCategory = favorite.stream()
+                .map(MemberCategory::getName)
+                .anyMatch(name -> name!=null&&name.equals(category.getName()));
+
+        if(hasCategory){
+            MemberCategory cat = memberCategoryRepository.findByMember_idAndName(member.getId(),category.getName()).orElseThrow();
+            cat.addViewCount();
+        }
+        else{
+            memberCategoryRepository.save(MemberCategory.builder().member(member).name(category.getName()).build());
+        }
+
+
+
     }
 
 }

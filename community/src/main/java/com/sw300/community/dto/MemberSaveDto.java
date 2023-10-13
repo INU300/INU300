@@ -21,17 +21,15 @@ public class MemberSaveDto {
     private String school;
     private String department;
     private String subclass;
-    private List<String> bookMark;
 
     @Builder
-    public MemberSaveDto(String email, String password, String name, String nickname ,String school, String department,List<String> bookMark){
+    public MemberSaveDto(String email, String password, String name, String nickname ,String school, String department){
         this.email = email;
         this.password = password;
         this.name = name;
         this.nickname = nickname;
         this.school = school;
         this.department = department;
-        this.bookMark = bookMark;
     }
 
     public Member toEntity(){
@@ -43,7 +41,6 @@ public class MemberSaveDto {
                 .school(school)
                 .department(department)
                 .subclass(subclass)
-                .bookmark(bookMark)
                 .build();
     }
 }
