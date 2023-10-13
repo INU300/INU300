@@ -100,10 +100,7 @@ public class MemberService {
             cat.addViewCount();
         }
         else{
-            MemberCategory.builder()
-                    .name(category.getName())
-                    .member(member)
-                    .build();
+            memberCategoryRepository.save(MemberCategory.builder().member(member).name(category.getName()).build());
         }
 
 
