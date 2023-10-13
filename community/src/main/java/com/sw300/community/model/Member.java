@@ -1,10 +1,7 @@
 package com.sw300.community.model;
 
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,11 +38,11 @@ public class Member {
     private int downVotes; // 비추천 수
 
 
-    @ElementCollection(fetch =  FetchType.LAZY)
-    private List<String> bookmark;
+    @OneToMany(mappedBy = "member",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private List<MemberCategory> favorite;
 
     @Builder
-    public Member(String email, String password,String name, String nickname, String school, String department, String subclass, List<String> bookmark){
+    public Member(String email, String password,String name, String nickname, String school, String department, String subclass){
         this.email = email;
         this.password = password;
         this.name = name;
@@ -53,7 +50,6 @@ public class Member {
         this.school = school;
         this.department = department;
         this.subclass = subclass;
-        this.bookmark = bookmark;
     }
 
     public void changeNickname(String newNickname){
