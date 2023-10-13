@@ -22,19 +22,14 @@ public class Board {
 
 //    @ManyToOne(fetch = FetchType.LAZY) // Many = Board, One = User
 //    @JoinColumn(name = "userId")
-//    private Uers user;
+//    private Users user;
 
     @Column(nullable = false, length = 100)
     private String title;
 
     private String content;
 
-/*    @Column(nullable = false, length = 20)
-    private String category;
-    -> Category로 변경
-*/
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
