@@ -25,6 +25,14 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    public List<CategoryDto> getAllCategory() {
+        List<Category> result = categoryRepository.findAll();
+
+        List<CategoryDto> dtoList = result.stream()
+                .map(category -> modelMapper.map(category,CategoryDto.class)).collect(Collectors.toList());
+
+        return dtoList;
+    }
 
     public List<CategoryDto> getBestCategory() {
 
@@ -47,7 +55,7 @@ public class CategoryService {
         // 카테고리별 세션 키 생성
         String categorySessionKey = LAST_VISIT_TIME_SESSION_KEY + "_" + cno;
 
-        // 카테고리별 세션에서 이전 방문 시간을 가져옵니다.
+        // 카테고리별 세션에서 이전 방문 시간을 가져옴
         Long lastVisitTime = (Long) session.getAttribute(categorySessionKey);
         long currentTimeMillis = System.currentTimeMillis();
 
