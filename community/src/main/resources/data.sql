@@ -1,9 +1,9 @@
-﻿CREATE TABLE Schools (
+﻿/*CREATE TABLE Schools (
 	id 			INTEGER PRIMARY KEY AUTO_INCREMENT,
-	school 		VARCHAR(10),
-	department 	VARCHAR(10),
-	subclass 	VARCHAR(10)
-);
+	school 		VARCHAR(255),
+	department 	VARCHAR(255),
+	subclass 	VARCHAR(255)
+);*/
 INSERT INTO Schools (school, department, subclass) VALUES 
 ('강릉원주대학교','중국어ㆍ문학','중어중문학과'),
 ('강릉원주대학교','영미어ㆍ문학','영어영문학과'),
