@@ -26,12 +26,12 @@ public class MemberController {
 
     @GetMapping("/")
     public String mainLogin(){
-        return "mainLogin";
+        return "/member/mainLogin";
     }
 
     @GetMapping("/join")
     public String join(){
-        return "joinPage";
+        return "/member/joinPage";
     }
 
     @GetMapping("/home")
@@ -46,29 +46,29 @@ public class MemberController {
     public String myPage(Model model, Principal principal){
         Member member = memberService.getMember(principal.getName());
         MemberInformationDto memDto = new MemberInformationDto(member.getEmail(),member.getName(),member.getNickname(),member.getSchool(),member.getDepartment(),
-                member.getSubclass(),member.getBookmark());
+                member.getSubclass(),member.getFavorite());
         model.addAttribute("mem",memDto);
-        return "myPage";
+        return "/member/myPage";
     }
 
     @GetMapping("/searchId")
     public String searchId(){
-        return "searchIdForm";
+        return "/member/searchIdForm";
     }
 
     @GetMapping("/searchPassword")
     public String searchPassword(){
-        return "searchPasswordForm";
+        return "/member/searchPasswordForm";
     }
 
     @PostMapping("/searchPassword")
     public String changePassword(@RequestParam("email")String email,@RequestParam("name") String name, Model model){
         if(memberService.searchPassword(email,name)){
             model.addAttribute("email",email);
-            return "newPasswordForm";
+            return "/member/newPasswordForm";
         }
         else
-            return "searchPasswordForm";
+            return "/member/searchPasswordForm";
     }
 
 
