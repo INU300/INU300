@@ -1,10 +1,9 @@
 package com.sw300.community.controller;
 
-import com.sw300.community.dto.CategoryDto;
-import com.sw300.community.dto.MemberCategoryDto;
-import com.sw300.community.dto.MemberGoodDto;
-import com.sw300.community.dto.MemberInformationDto;
+import com.sw300.community.dto.*;
+import com.sw300.community.model.Board;
 import com.sw300.community.model.Member;
+import com.sw300.community.service.BoardService;
 import com.sw300.community.service.CategoryService;
 import com.sw300.community.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +25,8 @@ public class MemberController {
 
     private final CategoryService categoryService;
 
+    private final BoardService boardService;
+
     @GetMapping("/")
     public String mainLogin(){
         return "/member/mainLogin";
@@ -43,7 +44,11 @@ public class MemberController {
 
         List<MemberCategoryDto> favoriteList = memberService.getFavorite(principal.getName());
 
-        model.addAttribute("favoriteList",favoriteList);
+        PageRequestDto pageRequestDto = PageRequestDto.builder().size(5).build();
+
+        PageResponseDto<Board> favoriteDto = boardService.getFavoriteList(pageRequestDto,favoriteList);
+
+        model.addAttribute("favoriteDto",favoriteDto);
 
         model.addAttribute("dtoList", dtoList);
     }

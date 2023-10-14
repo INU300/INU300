@@ -7,6 +7,37 @@
     <div class="row mt-3">
         <div class="col">
             <div class="card">
+                <div class="card-header">자주가는 게시판</div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">제목</th>
+                            <th scope="col">작성시간</th>
+                        </tr>
+
+                        </thead>
+                        <tbody>
+                        <tr th:each="dto:${favoriteDto.dtoList}">
+                            <th scope="row">[[${dto.id}]]</th>
+                            <td>
+                                <a th:href="@{/board/{id}(id=${dto.id})}"> [[${dto.title}]] </a>
+                            </td>
+                            <td>[[${#dates.format(dto.createDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+
+                </div>  <!--end card-body-->
+            </div>  <!--end card-->
+        </div>  <!--end col-->
+    </div>  <!--end row-->
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
                 <div class="card-header">인기 게시판</div>
                 <div class="card-body">
                     <h5 class="card-title boardList">게시판 순위: </h5>
