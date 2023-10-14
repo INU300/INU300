@@ -19,17 +19,16 @@ public class BoardServiceTests {
     private BoardService boardService;
 
     @Test
-    @Commit
     public void testWritePost() {
 
-        Long cno = 3L;
+        Long cno = 6L;
 
         Category category = Category.builder().cno(cno).build();
 
-        IntStream.rangeClosed(1,100).forEach(i -> {
+        IntStream.rangeClosed(1,10).forEach(i -> {
             Board board = Board.builder()
-                    .title("썰게시판 제목" + i)
-                    .content("썰게시판 내용" + i)
+                    .title("6게시판 제목" + i)
+                    .content("6게시판 내용" + i)
                     .category(category)
                     .build();
             boardService.writePost(board);
