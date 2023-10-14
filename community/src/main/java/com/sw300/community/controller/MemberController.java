@@ -59,8 +59,14 @@ public class MemberController {
                 .school(member.getSchool())
                 .department(member.getDepartment())
                 .subclass(member.getSubclass())
-                .favorite(member.getFavorite()).build();
+                .build();
+        List<MemberCategoryDto> favoriteList = memberService.getFavorite(principal.getName());
+        if(favoriteList.size()>5) {
+            List<MemberCategoryDto> subList = favoriteList.subList(5, favoriteList.size());
+            favoriteList.removeAll(subList);
+        }
         model.addAttribute("mem",memDto);
+        model.addAttribute("favoriteList",favoriteList);
         return "/member/myPage";
     }
 
