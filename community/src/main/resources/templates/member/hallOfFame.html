@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hall of Fame</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* 여기에 사용자 정의 CSS를 추가할 수 있습니다. */
+        body {
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .user-1 {
+            font-size: 35px; /* 1번째 사용자의 글씨 크기 */
+        }
+        .user-2 {
+            font-size: 30px; /* 2번째 사용자의 글씨 크기 */
+        }
+        .user-3 {
+            font-size: 25px; /* 3번째 사용자의 글씨 크기 */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="display-4">Hall of Fame</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Nickname</th>
+            <th>Up Votes (추천수)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="goodDto, iterStat : ${goodDto}"
+            th:classappend="${iterStat.index == 0} ? 'user-1' :
+                  (${iterStat.index == 1} ? 'user-2' :
+                  (${iterStat.index == 2} ? 'user-3' : ''))">
+            <td th:text="${goodDto.nickname}"></td>
+            <td th:text="${goodDto.upVotes}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
