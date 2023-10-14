@@ -41,7 +41,15 @@ public class MemberService {
         Optional<School> school = schoolRepository.findBySchoolAndDepartment(memberSaveDto.getSchool(),memberSaveDto.getDepartment());
         memberSaveDto.setSubclass(school.get().getSubclass());
         memberSaveDto.setPassword(passwordEncoder.encode(memberSaveDto.getPassword()));
-        return memberRepository.save(memberSaveDto.toEntity()).getId();
+        Member newMem = memberRepository.save(memberSaveDto.toEntity());
+        //임의로 자주가는 게시판설정
+        viewAddCount(categoryRepository.findByName("1게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("2게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("3게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("4게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("5게시판").get().getCno(), newMem.getEmail());
+
+        return newMem.getId();
     }
 
     @Transactional
