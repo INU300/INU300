@@ -1,6 +1,8 @@
 package com.sw300.community.controller;
 
 import com.sw300.community.dto.CategoryDto;
+import com.sw300.community.dto.MemberCategoryDto;
+import com.sw300.community.dto.MemberGoodDto;
 import com.sw300.community.dto.MemberInformationDto;
 import com.sw300.community.model.Member;
 import com.sw300.community.service.CategoryService;
@@ -35,9 +37,13 @@ public class MemberController {
     }
 
     @GetMapping("/home")
-    public void home(Model model){
+    public void home(Model model, Principal principal){
 
         List<CategoryDto> dtoList = categoryService.getBestCategory();
+
+        List<MemberCategoryDto> favoriteList = memberService.getFavorite(principal.getName());
+
+        model.addAttribute("favoriteList",favoriteList);
 
         model.addAttribute("dtoList", dtoList);
     }
@@ -45,8 +51,15 @@ public class MemberController {
     @GetMapping("/myPage")
     public String myPage(Model model, Principal principal){
         Member member = memberService.getMember(principal.getName());
-        MemberInformationDto memDto = new MemberInformationDto(member.getEmail(),member.getName(),member.getNickname(),member.getSchool(),member.getDepartment(),
-                member.getSubclass(),member.getFavorite());
+
+        MemberInformationDto memDto = MemberInformationDto.builder()
+                .email(member.getEmail())
+                .name(member.getName())
+                .nickname(member.getNickname())
+                .school(member.getSchool())
+                .department(member.getDepartment())
+                .subclass(member.getSubclass())
+                .favorite(member.getFavorite()).build();
         model.addAttribute("mem",memDto);
         return "/member/myPage";
     }
@@ -69,6 +82,15 @@ public class MemberController {
         }
         else
             return "/member/searchPasswordForm";
+    }
+
+    @GetMapping("/hallOfFame")
+    public String hallOfFame(Model model){
+        List<MemberGoodDto> goodDto = memberService.getGoodDto();
+
+        model.addAttribute("goodDto",goodDto);
+
+        return "/member/hallOfFame";
     }
 
 
