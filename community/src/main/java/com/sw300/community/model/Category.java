@@ -15,7 +15,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cno;
-
+    @Column(unique = true)
     private String name;
 
     @Column(name = "daily_visitors", columnDefinition = "int default 0") // 일별 방문자 수를 저장할 컬럼

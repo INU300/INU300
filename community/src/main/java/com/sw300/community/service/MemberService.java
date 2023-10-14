@@ -1,20 +1,28 @@
 package com.sw300.community.service;
 
 
+import com.sw300.community.dto.MemberCategoryDto;
+import com.sw300.community.dto.MemberGoodDto;
 import com.sw300.community.dto.MemberSaveDto;
 import com.sw300.community.model.Category;
 import com.sw300.community.model.Member;
 import com.sw300.community.model.MemberCategory;
+import com.sw300.community.model.School;
 import com.sw300.community.repository.CategoryRepository;
 import com.sw300.community.repository.MemberCategoryRepository;
 import com.sw300.community.repository.MemberRepository;
+import com.sw300.community.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,12 +34,22 @@ public class MemberService {
 
     private final MemberCategoryRepository memberCategoryRepository;
     private final CategoryRepository categoryRepository;
+    private final SchoolRepository schoolRepository;
 
     @Transactional
     public Long joinMember(MemberSaveDto memberSaveDto){
-        /* 소분류 저장 로직*/
+        Optional<School> school = schoolRepository.findBySchoolAndDepartment(memberSaveDto.getSchool(),memberSaveDto.getDepartment());
+        memberSaveDto.setSubclass(school.get().getSubclass());
         memberSaveDto.setPassword(passwordEncoder.encode(memberSaveDto.getPassword()));
-        return memberRepository.save(memberSaveDto.toEntity()).getId();
+        Member newMem = memberRepository.save(memberSaveDto.toEntity());
+        //임의로 자주가는 게시판설정
+        viewAddCount(categoryRepository.findByName("1게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("2게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("3게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("4게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("5게시판").get().getCno(), newMem.getEmail());
+
+        return newMem.getId();
     }
 
     @Transactional
@@ -100,11 +118,38 @@ public class MemberService {
             cat.addViewCount();
         }
         else{
-            memberCategoryRepository.save(MemberCategory.builder().member(member).name(category.getName()).build());
+            MemberCategory mem = memberCategoryRepository.save(MemberCategory.builder().member(member).name(category.getName()).build());
         }
+    }
 
+    @Transactional
+    public List<MemberCategoryDto> getFavorite(String email){
+        Optional<Member> member = memberRepository.findByEmail(email);
+        List<MemberCategory> favorite = member.get().getFavorite();
+        List<MemberCategoryDto> favoriteDto = favorite.stream()
+                .map(category -> MemberCategoryDto.builder()
+                        .name(category.getName())
+                        .viewCount(category.getViewCount())
+                        .build())
+                .collect(Collectors.toList());
 
+        //자주가는 게시판을 viewCount에 따라내림차순으로 정렬
+        List<MemberCategoryDto> sortedFavoriteDto = favoriteDto.stream()
+                .sorted(Comparator.comparingInt(MemberCategoryDto::getViewCount).reversed())
+                .collect(Collectors.toList());
+        return sortedFavoriteDto;
 
+    }
+
+    @Transactional
+    public List<MemberGoodDto> getGoodDto(){
+        List<Member> members = memberRepository.findAll(Sort.by(Sort.Direction.DESC,"upVotes"));
+
+        List<MemberGoodDto> goodDto = members.stream().map(member -> MemberGoodDto.builder()
+                .nickname(member.getNickname())
+                .upVotes(member.getUpVotes())
+                .build()).collect(Collectors.toList());
+        return goodDto;
     }
 
 }
