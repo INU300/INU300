@@ -43,14 +43,19 @@
       <th>소분류</th>
       <td th:text="${mem.subclass}">IT</td>
     </tr>
+    <thead>
     <tr>
-      <th>즐겨찾기 리스트</th>
-      <td>
-        <ul>
-          <li th:each="category : ${mem.favorite}" th:text="${category}">Category 1</li>
-        </ul>
-      </td>
+      <th>Nickname</th>
     </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <th colspan="1">자주 가는 게시판</th>
+    </tr>
+    <tr th:each="favorite : ${favoriteList}">
+      <td th:text="${favorite.name}">Favorite Board Name</td>
+    </tr>
+    </tbody>
   </table>
   <button class="btn btn-primary" id="editPasswordBtn">비밀번호 수정</button>
   <div id="passwordEditRow" style="display: none;">
