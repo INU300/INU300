@@ -52,6 +52,7 @@ public class Member {
         this.school = school;
         this.department = department;
         this.subclass = subclass;
+        this.favorite = new ArrayList<>();
     }
 
     public void changeNickname(String newNickname){
