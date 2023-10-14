@@ -20,9 +20,9 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY) // Many = Board, One = User
-//    @JoinColumn(name = "userId")
-//    private Users user;
+    @ManyToOne(fetch = FetchType.LAZY) // Many = Board, One = Member
+    @JoinColumn(name = "memberId")
+    private Member member;
 
     @Column(nullable = false, length = 100)
     private String title;
