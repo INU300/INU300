@@ -4,7 +4,7 @@
 	department 	VARCHAR(255),
 	subclass 	VARCHAR(255)
 );*/
-INSERT INTO Schools (school, department, subclass) VALUES 
+INSERT INTO Schools (school, subclass, department) VALUES
 ('강릉원주대학교','중국어ㆍ문학','중어중문학과'),
 ('강릉원주대학교','영미어ㆍ문학','영어영문학과'),
 ('강릉원주대학교','독일어ㆍ문학','독어독문학과'),
