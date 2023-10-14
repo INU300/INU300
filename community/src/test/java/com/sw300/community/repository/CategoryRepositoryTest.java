@@ -150,4 +150,57 @@ class CategoryRepositoryTest {
         memberRepository.save(member3);
     }
 
+    @Test
+    public void insertCategory(){
+        Category category = Category.builder()
+                .name("1게시판")
+                .build();
+
+        Category category1 = Category.builder()
+                .name("2게시판")
+                .build();
+
+        Category category2 = Category.builder()
+                .name("3게시판")
+                .build();
+        Category category3 = Category.builder()
+                .name("4게시판")
+                .build();
+
+        Category category4 = Category.builder()
+                .name("5게시판")
+                .build();
+
+        Category category5 = Category.builder()
+                .name("6게시판")
+                .build();
+        Category category6 = Category.builder()
+                .name("7게시판")
+                .build();
+
+        Category category7 = Category.builder()
+                .name("8게시판")
+                .build();
+
+        Category category8 = Category.builder()
+                .name("9게시판")
+                .build();
+
+        Category category9 = Category.builder()
+                .name("10게시판")
+                .build();
+
+
+        categoryRepository.save(category);
+        categoryRepository.save(category1);
+        categoryRepository.save(category2);
+        categoryRepository.save(category3);
+        categoryRepository.save(category4);
+        categoryRepository.save(category5);
+        categoryRepository.save(category6);
+        categoryRepository.save(category7);
+        categoryRepository.save(category8);
+        categoryRepository.save(category9);
+    }
+
 }
