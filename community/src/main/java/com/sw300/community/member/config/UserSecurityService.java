@@ -1,8 +1,8 @@
-package com.sw300.community.config;
+package com.sw300.community.member.config;
 
 
-import com.sw300.community.model.Member;
-import com.sw300.community.repository.MemberRepository;
+import com.sw300.community.member.model.Member;
+import com.sw300.community.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

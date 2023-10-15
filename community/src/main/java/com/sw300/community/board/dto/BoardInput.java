@@ -1,15 +1,12 @@
 package com.sw300.community.board.dto;
 
 import com.sw300.community.model.Category;
-import com.sw300.community.model.Member;
+import com.sw300.community.member.model.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor
