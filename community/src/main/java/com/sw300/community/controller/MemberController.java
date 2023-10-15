@@ -1,5 +1,7 @@
 package com.sw300.community.controller;
 
+import com.sw300.community.board.model.Board;
+import com.sw300.community.board.service.BoardService;
 import com.sw300.community.dto.*;
 import com.sw300.community.model.Member;
 import com.sw300.community.service.CategoryService;

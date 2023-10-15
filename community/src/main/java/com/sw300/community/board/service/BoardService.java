@@ -2,11 +2,19 @@ package com.sw300.community.board.service;
 
 import com.sw300.community.board.common.ServiceResult;
 import com.sw300.community.board.dto.BoardInput;
+import com.sw300.community.board.model.Board;
+import com.sw300.community.dto.MemberCategoryDto;
+import com.sw300.community.dto.PageRequestDto;
+import com.sw300.community.dto.PageResponseDto;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public interface BoardService {
 
     /**
      * 게시글 추가
+     *
      * @param boardInput
      * @param email
      * @return
@@ -15,6 +23,7 @@ public interface BoardService {
 
     /**
      * 게시글 수정
+     *
      * @param id
      * @param boardInput
      * @param email
@@ -24,6 +33,7 @@ public interface BoardService {
 
     /**
      * 게시글 삭제
+     *
      * @param id
      * @param email
      * @return
@@ -32,6 +42,7 @@ public interface BoardService {
 
     /**
      * 게시글의 조회수 증가
+     *
      * @param id
      * @param email
      * @return
@@ -40,6 +51,7 @@ public interface BoardService {
 
     /**
      * 게시글의 좋아요 기능
+     *
      * @param id
      * @param email
      * @return
@@ -48,9 +60,17 @@ public interface BoardService {
 
     /**
      * 게시글의 좋아요를 취소
+     *
      * @param id
      * @param email
      * @return
      */
     ServiceResult setBoarUnLike(Long id, String email);
+
+    Board getPost(long id);
+
+    PageResponseDto<Board> getPostList(PageRequestDto pageRequestDto);
+
+    PageResponseDto<Board> getFavoriteList(PageRequestDto pageRequestDto, List<MemberCategoryDto> favoriteList);
 }
+
