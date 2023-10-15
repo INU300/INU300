@@ -10,16 +10,24 @@ import com.sw300.community.board.model.BoardLike;
 import com.sw300.community.board.repository.BoardHitsRepository;
 import com.sw300.community.board.repository.BoardLikeRepository;
 import com.sw300.community.board.repository.BoardRepository;
+import com.sw300.community.dto.MemberCategoryDto;
+import com.sw300.community.dto.PageRequestDto;
+import com.sw300.community.dto.PageResponseDto;
 import com.sw300.community.model.Member;
 import com.sw300.community.repository.CategoryRepository;
 import com.sw300.community.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -194,4 +202,46 @@ public class BoardServiceImpl implements BoardService {
 
         return ServiceResult.success();
     }
+
+    public PageResponseDto<Board> getPostList(PageRequestDto pageRequestDto) {
+        String[] types = pageRequestDto.getTypes();
+        String keyword = pageRequestDto.getKeyword();
+        Pageable pageable = pageRequestDto.getPageable("id");
+
+        Page<Board> result = boardRepository.searchAll(pageRequestDto.getCno(), types, keyword, pageable);
+        //Page<Board> result = boardRepository.findByCategory(pageRequestDto.getCno(), pageable);
+
+        List<Board> dtoList = result.getContent();
+
+        return PageResponseDto.<Board>withAll()
+                .pageRequestDto(pageRequestDto)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
+    }
+
+
+    @Transactional
+    public PageResponseDto<Board> getFavoriteList(PageRequestDto pageRequestDto,List<MemberCategoryDto> favoriteList){
+        String[] types = pageRequestDto.getTypes();
+        String keyword = pageRequestDto.getKeyword();
+        Pageable pageable = pageRequestDto.getPageable("id");
+        List<Long> cnoList = new ArrayList<>();
+        for(int i = 0 ; i<5;i++){
+            String name = favoriteList.get(i).getName();
+            cnoList.add(categoryRepository.findByName(name).get().getCno());
+        }
+
+        Page<Board> result = boardRepository.searchFavorite(cnoList, types, keyword, pageable);
+
+        List<Board> dtoList = result.getContent();
+
+        return PageResponseDto.<Board>withAll()
+                .pageRequestDto(pageRequestDto)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
+
+    }
+
 }
