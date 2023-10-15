@@ -1,6 +1,6 @@
 package com.sw300.community.board.model;
 
-import com.sw300.community.model.Category;
+import com.sw300.community.category.model.Category;
 import com.sw300.community.member.model.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

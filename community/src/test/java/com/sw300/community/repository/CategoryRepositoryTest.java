@@ -1,9 +1,10 @@
 package com.sw300.community.repository;
 
+import com.sw300.community.category.repository.CategoryRepository;
 import com.sw300.community.member.dto.MemberCategoryDto;
 import com.sw300.community.member.repository.MemberCategoryRepository;
 import com.sw300.community.member.repository.MemberRepository;
-import com.sw300.community.model.Category;
+import com.sw300.community.category.model.Category;
 import com.sw300.community.member.model.Member;
 import com.sw300.community.member.model.MemberCategory;
 import com.sw300.community.member.service.MemberService;
