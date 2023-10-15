@@ -2,6 +2,7 @@ package com.sw300.community.repository.search;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
+import com.sw300.community.board.model.Board;
 import com.sw300.community.model.QBoard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

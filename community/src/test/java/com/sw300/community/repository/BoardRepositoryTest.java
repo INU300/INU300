@@ -1,5 +1,7 @@
 package com.sw300.community.repository;
 
+import com.sw300.community.board.model.Board;
+import com.sw300.community.board.repository.BoardRepository;
 import com.sw300.community.dto.PageRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
