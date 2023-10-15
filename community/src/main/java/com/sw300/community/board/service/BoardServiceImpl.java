@@ -14,7 +14,7 @@ import com.sw300.community.member.dto.MemberCategoryDto;
 import com.sw300.community.dto.PageRequestDto;
 import com.sw300.community.dto.PageResponseDto;
 import com.sw300.community.member.model.Member;
-import com.sw300.community.repository.CategoryRepository;
+import com.sw300.community.category.repository.CategoryRepository;
 import com.sw300.community.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
