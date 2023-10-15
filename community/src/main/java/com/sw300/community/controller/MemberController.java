@@ -1,9 +1,7 @@
 package com.sw300.community.controller;
 
 import com.sw300.community.dto.*;
-import com.sw300.community.model.Board;
 import com.sw300.community.model.Member;
-import com.sw300.community.service.BoardService;
 import com.sw300.community.service.CategoryService;
 import com.sw300.community.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.List;
-import java.util.Map;
 
 
 @Controller
