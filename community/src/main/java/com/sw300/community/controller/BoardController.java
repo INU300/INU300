@@ -2,8 +2,6 @@ package com.sw300.community.controller;
 
 import com.sw300.community.dto.PageRequestDto;
 import com.sw300.community.dto.PageResponseDto;
-import com.sw300.community.model.Board;
-import com.sw300.community.service.BoardService;
 import com.sw300.community.service.CategoryService;
 import com.sw300.community.service.MemberService;
 import lombok.RequiredArgsConstructor;

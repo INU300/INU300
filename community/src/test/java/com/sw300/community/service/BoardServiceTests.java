@@ -2,12 +2,10 @@ package com.sw300.community.service;
 
 import com.sw300.community.dto.PageRequestDto;
 import com.sw300.community.dto.PageResponseDto;
-import com.sw300.community.model.Board;
 import com.sw300.community.model.Category;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 
 import java.util.stream.IntStream;
 
