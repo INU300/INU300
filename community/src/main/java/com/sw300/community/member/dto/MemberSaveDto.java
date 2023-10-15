@@ -1,13 +1,11 @@
-package com.sw300.community.dto;
+package com.sw300.community.member.dto;
 
 
-import com.sw300.community.model.Member;
+import com.sw300.community.member.model.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter

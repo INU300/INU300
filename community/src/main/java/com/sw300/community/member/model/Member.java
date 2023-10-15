@@ -1,4 +1,4 @@
-package com.sw300.community.model;
+package com.sw300.community.member.model;
 
 
 import lombok.*;

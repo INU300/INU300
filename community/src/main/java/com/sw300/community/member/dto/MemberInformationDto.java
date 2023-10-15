@@ -1,7 +1,7 @@
-package com.sw300.community.dto;
+package com.sw300.community.member.dto;
 
 
-import com.sw300.community.model.MemberCategory;
+import com.sw300.community.member.model.MemberCategory;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
