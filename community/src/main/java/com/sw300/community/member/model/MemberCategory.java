@@ -1,6 +1,7 @@
-package com.sw300.community.model;
+package com.sw300.community.member.model;
 
 
+import com.sw300.community.member.model.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

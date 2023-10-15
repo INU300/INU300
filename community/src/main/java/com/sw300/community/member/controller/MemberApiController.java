@@ -1,16 +1,13 @@
-package com.sw300.community.controller;
+package com.sw300.community.member.controller;
 
-import com.sw300.community.dto.MemberSaveDto;
-import com.sw300.community.model.Member;
-import com.sw300.community.service.MemberService;
+import com.sw300.community.member.dto.MemberSaveDto;
+import com.sw300.community.member.model.Member;
+import com.sw300.community.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Map;

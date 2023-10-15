@@ -2,7 +2,8 @@ package com.sw300.community.repository.search;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
-import com.sw300.community.model.QBoard;
+import com.sw300.community.board.model.Board;
+import com.sw300.community.board.model.QBoard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
                         booleanBuilder.or(board.title.contains(keyword));
                         break;
                     case "c":
-                        booleanBuilder.or(board.content.contains(keyword));
+                        booleanBuilder.or(board.contents.contains(keyword));
                         break;
                     case "w":
                         //booleanBuilder.or(board.member.name.contains(keyword));
@@ -73,7 +74,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
                         booleanBuilder.or(board.title.contains(keyword));
                         break;
                     case "c":
-                        booleanBuilder.or(board.content.contains(keyword));
+                        booleanBuilder.or(board.contents.contains(keyword));
                         break;
                     case "w":
                         //booleanBuilder.or(board.member.name.contains(keyword));

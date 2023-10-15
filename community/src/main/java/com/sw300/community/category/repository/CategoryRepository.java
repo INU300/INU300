@@ -1,6 +1,6 @@
-package com.sw300.community.repository;
+package com.sw300.community.category.repository;
 
-import com.sw300.community.model.Category;
+import com.sw300.community.category.model.Category;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

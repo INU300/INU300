@@ -1,4 +1,4 @@
-package com.sw300.community.config;
+package com.sw300.community.member.config;
 
 
 import org.springframework.context.annotation.Bean;

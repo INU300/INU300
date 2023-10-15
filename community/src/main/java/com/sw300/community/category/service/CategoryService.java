@@ -1,8 +1,8 @@
-package com.sw300.community.service;
+package com.sw300.community.category.service;
 
-import com.sw300.community.dto.CategoryDto;
-import com.sw300.community.model.Category;
-import com.sw300.community.repository.CategoryRepository;
+import com.sw300.community.category.dto.CategoryDto;
+import com.sw300.community.category.model.Category;
+import com.sw300.community.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;

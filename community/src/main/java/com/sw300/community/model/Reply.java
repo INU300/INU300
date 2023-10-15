@@ -4,6 +4,7 @@
 
 package com.sw300.community.model;
 
+import com.sw300.community.board.model.Board;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

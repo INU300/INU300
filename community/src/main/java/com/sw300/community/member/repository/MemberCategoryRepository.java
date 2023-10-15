@@ -1,6 +1,6 @@
-package com.sw300.community.repository;
+package com.sw300.community.member.repository;
 
-import com.sw300.community.model.MemberCategory;
+import com.sw300.community.member.model.MemberCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

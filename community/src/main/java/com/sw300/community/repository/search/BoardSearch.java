@@ -1,5 +1,6 @@
 package com.sw300.community.repository.search;
 
+import com.sw300.community.board.model.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

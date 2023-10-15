@@ -1,8 +1,8 @@
 package com.sw300.community.controller;
 
-import com.sw300.community.model.Member;
-import com.sw300.community.service.CategoryService;
-import com.sw300.community.service.MemberService;
+import com.sw300.community.member.model.Member;
+import com.sw300.community.category.service.CategoryService;
+import com.sw300.community.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;

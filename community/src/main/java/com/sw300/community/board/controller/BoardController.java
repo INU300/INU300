@@ -1,9 +1,11 @@
-package com.sw300.community.controller;
+package com.sw300.community.board.controller;
 
+import com.sw300.community.board.model.Board;
+import com.sw300.community.board.service.BoardService;
 import com.sw300.community.dto.PageRequestDto;
 import com.sw300.community.dto.PageResponseDto;
-import com.sw300.community.service.CategoryService;
-import com.sw300.community.service.MemberService;
+import com.sw300.community.category.service.CategoryService;
+import com.sw300.community.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
