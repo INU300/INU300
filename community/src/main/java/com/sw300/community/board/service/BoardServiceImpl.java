@@ -42,7 +42,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public ServiceResult addBoard(BoardInput boardInput, String email) {
-        
+
         Optional<Member> optionalUser = memberRepository.findByEmail(email);
         if (!optionalUser.isPresent()) {
             return ServiceResult.fail("사용자가 존재하지 않습니다.");
@@ -84,7 +84,7 @@ public class BoardServiceImpl implements BoardService {
                 .member(boardInput.getMember())
                 .updateDate(LocalDateTime.now())
                 .build());
-        
+
         return ServiceResult.success();
     }
 
@@ -203,6 +203,13 @@ public class BoardServiceImpl implements BoardService {
         return ServiceResult.success();
     }
 
+    @Override
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public Board getPost(long id) {
+        return boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("failed to load post : cannot find post id"));
+    }
+
+    @Override
     public PageResponseDto<Board> getPostList(PageRequestDto pageRequestDto) {
         String[] types = pageRequestDto.getTypes();
         String keyword = pageRequestDto.getKeyword();
@@ -216,18 +223,18 @@ public class BoardServiceImpl implements BoardService {
         return PageResponseDto.<Board>withAll()
                 .pageRequestDto(pageRequestDto)
                 .dtoList(dtoList)
-                .total((int)result.getTotalElements())
+                .total((int) result.getTotalElements())
                 .build();
     }
 
-
+    @Override
     @Transactional
-    public PageResponseDto<Board> getFavoriteList(PageRequestDto pageRequestDto,List<MemberCategoryDto> favoriteList){
+    public PageResponseDto<Board> getFavoriteList(PageRequestDto pageRequestDto, List<MemberCategoryDto> favoriteList) {
         String[] types = pageRequestDto.getTypes();
         String keyword = pageRequestDto.getKeyword();
         Pageable pageable = pageRequestDto.getPageable("id");
         List<Long> cnoList = new ArrayList<>();
-        for(int i = 0 ; i<5;i++){
+        for (int i = 0; i < 5; i++) {
             String name = favoriteList.get(i).getName();
             cnoList.add(categoryRepository.findByName(name).get().getCno());
         }
@@ -239,7 +246,7 @@ public class BoardServiceImpl implements BoardService {
         return PageResponseDto.<Board>withAll()
                 .pageRequestDto(pageRequestDto)
                 .dtoList(dtoList)
-                .total((int)result.getTotalElements())
+                .total((int) result.getTotalElements())
                 .build();
 
     }
