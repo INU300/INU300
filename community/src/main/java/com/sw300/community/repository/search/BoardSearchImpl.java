@@ -45,7 +45,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
             query.where(booleanBuilder);
         }  // end if
 
-        // id > 0
+        // cno
         query.where(board.category.cno.eq(cno));
 
         // paging
