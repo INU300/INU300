@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>회원가입</title>
-  <!-- 부트스트랩 CSS 링크 추가 -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<!-- 부트스트랩 그리드 시스템을 활용하여 회원가입 폼 가운데 정렬 -->
 <div class="container">
   <div class="row justify-content-center align-items-center min-vh-100">
     <div class="col-md-6">
@@ -26,20 +24,28 @@
           <label for="name">이름:</label>
           <input type="text" class="form-control" id="name" name="name" required>
         </div>
-
         <div class="form-group">
-          <label for="nickName">닉네임:</label>
+          <label for="nickname">별명:</label>
           <input type="text" class="form-control" id="nickname" name="nickname" required>
         </div>
 
         <div class="form-group">
           <label for="school">학교:</label>
-          <input type="text" class="form-control" id="school" name="school" required>
+          <!-- 학교 선택 드롭다운 -->
+          <select class="form-control" id="school" name="school">
+            <option value="" selected disabled>학교 선택</option>
+            <th:block th:each="school : ${schoolDto}">
+              <option th:value="${school}" th:text="${school}"></option>
+            </th:block>
+          </select>
         </div>
 
         <div class="form-group">
           <label for="department">학과:</label>
-          <input type="text" class="form-control" id="department" name="department" required>
+          <!-- 학과 선택 드롭다운 -->
+          <select class="form-control" id="department" name="department">
+            <option value="" selected disabled>학과 선택</option>
+          </select>
         </div>
       </form>
       <button type="button" class="btn btn-primary btn-block" id="btn-join">가입하기</button>
@@ -49,6 +55,30 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+  // 학교 선택란의 변경 이벤트 핸들러
+  $('#school').change(function() {
+    var selectedSchool = $(this).val();
+    var departmentDropdown = $('#department');
+
+    // 선택한 학교에 따라 동적으로 학과 목록을 가져오는 AJAX 요청
+    jQuery.ajax({
+      url: '/api/getDepartmentsBySchool?school=' + selectedSchool,
+      method: 'GET',
+      success: function(data) {
+        departmentDropdown.empty();
+        $.each(data, function(index, department) {
+          departmentDropdown.append($('<option></option>').attr('value', department).text(department));
+        });
+      },
+      error: function(xhr, status, error) {
+        console.log('AJAX 요청 실패: ' + error);
+        // 실패 시 대체 처리나 오류 메시지를 표시하는 등의 작업을 수행할 수 있습니다.
+      }
+    });
+
+  });
+</script>
 <script src="/index.js"></script>
 </body>
 </html>
