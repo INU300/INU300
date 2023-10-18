@@ -3,13 +3,14 @@ package com.sw300.community.member.controller;
 import com.sw300.community.member.dto.MemberSaveDto;
 import com.sw300.community.member.model.Member;
 import com.sw300.community.member.service.MemberService;
+import com.sw300.community.model.School;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,6 +39,13 @@ public class MemberApiController {
     public Long newPassword(@RequestBody Map<String,String> inform){
         System.out.println(inform.get("email"));
         return memberService.newPassword(inform.get("email"),inform.get("newPassword"));
+    }
+
+    @GetMapping("/api/getDepartmentsBySchool")
+    public ResponseEntity<List<String>> getDepartmentsBySchool(@RequestParam String school){
+        List<String> departments = memberService.getDepartment(school);
+        System.out.println(departments.size());
+        return ResponseEntity.ok(departments);
     }
 
 
