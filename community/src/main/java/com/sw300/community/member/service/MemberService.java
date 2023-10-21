@@ -18,9 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -149,6 +147,39 @@ public class MemberService {
                 .upVotes(member.getUpVotes())
                 .build()).collect(Collectors.toList());
         return goodDto;
+    }
+
+    @Transactional
+    public List<String> getSchool(){
+        List<School> schools = schoolRepository.findAll();
+
+        // 중복된 학교 이름을 제거하기 위해 Set을 사용
+        Set<String> uniqueSchools = new HashSet<>();
+
+        // 중복 제거된 학교 이름을 Set에 추가
+        for (School school : schools) {
+            uniqueSchools.add(school.getSchool());
+        }
+
+        // Set을 List로 변환
+        List<String> schoolDto = new ArrayList<>(uniqueSchools);
+
+        Collections.sort(schoolDto);
+        return schoolDto;
+    }
+
+    @Transactional
+    public List<String>getDepartment(String school){
+        List<School> department= schoolRepository.findAllBySchool(school);
+        List<String> departmentNames = new ArrayList<>();
+
+        // 학과 엔티티에서 학과 이름을 추출하여 리스트에 추가
+        for (School departments : department) {
+            departmentNames.add(departments.getDepartment());
+        }
+
+        Collections.sort(departmentNames);
+        return departmentNames;
     }
 
 }

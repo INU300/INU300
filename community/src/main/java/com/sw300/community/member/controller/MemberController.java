@@ -35,7 +35,9 @@ public class MemberController {
     }
 
     @GetMapping("/join")
-    public String join(){
+    public String join(Model model){
+        List<String> schoolDto = memberService.getSchool();
+        model.addAttribute("schoolDto",schoolDto);
         return "/member/joinPage";
     }
 
