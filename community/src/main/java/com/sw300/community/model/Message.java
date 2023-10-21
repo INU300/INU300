@@ -1,6 +1,7 @@
 package com.sw300.community.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sw300.community.member.model.Member;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;

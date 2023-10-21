@@ -2,8 +2,8 @@ package com.sw300.community.controller;
 
 import com.sw300.community.dto.MessageDto;
 import com.sw300.community.dto.ResponseDto;
-import com.sw300.community.model.Member;
-import com.sw300.community.service.MemberService;
+import com.sw300.community.member.model.Member;
+import com.sw300.community.member.service.MemberService;
 import com.sw300.community.service.MessageService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

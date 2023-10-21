@@ -1,9 +1,9 @@
 package com.sw300.community.service;
 
 import com.sw300.community.dto.MessageDto;
-import com.sw300.community.model.Member;
+import com.sw300.community.member.model.Member;
+import com.sw300.community.member.repository.MemberRepository;
 import com.sw300.community.model.Message;
-import com.sw300.community.repository.MemberRepository;
 import com.sw300.community.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
