@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <!-- 필요한 CSS 또는 JS 링크 추가 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <h2>새 게시글 작성</h2>
+            <form id="boardForm" th:action="@{/api/board}" method="post">
+                <div class="mb-3">
+                    <label for="title" class="form-label">제목</label>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="제목을 입력하세요" required>
+                </div>
+                <div class="mb-3">
+                    <label for="contents" class="form-label">내용</label>
+                    <textarea class="form-control" id="contents" name="contents" rows="3" placeholder="내용을 입력하세요" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">카테고리</label>
+                    <textarea id="category" name="content" required></textarea>
+                </div>
+                <button type="button" id="classifyButton" class="btn btn-info">카테고리 분류</button>
+                <button type="submit" class="btn btn-primary">제출</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#classifyButton").click(function() {
+            var title = $("#title").val();
+            var contents = $("#contents").val();
+
+            $.ajax({
+                url: "/api/externalClassify",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ title: title, content: contents }),
+                success: function(response) {
+                    // 카테고리 업데이트
+                    $("#category").empty();
+                    $("#category").append(new Option(response.category, response.category));
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + error);
+                    alert("카테고리 분류에 실패했습니다.");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
