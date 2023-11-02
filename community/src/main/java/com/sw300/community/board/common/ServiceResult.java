@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Data
-public class ServiceResult {
+public class ServiceResult<T> {
 
     private boolean result;
     private String message;
+    private T data;
+
 
     public static ServiceResult fail(String message) {
         return ServiceResult.builder()
@@ -24,6 +26,13 @@ public class ServiceResult {
     public static ServiceResult success() {
         return ServiceResult.builder()
                 .result(true)
+                .build();
+    }
+
+    public static <T> ServiceResult<T> success(T data) {
+        return ServiceResult.<T>builder()
+                .result(true)
+                .data(data)
                 .build();
     }
 

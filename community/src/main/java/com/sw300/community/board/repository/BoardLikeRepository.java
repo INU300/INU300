@@ -11,7 +11,6 @@ public interface BoardLikeRepository extends JpaRepository<BoardLike, Long> {
 
     long countByBoardAndMember(Board board, Member member);
 
-    // 삭제하려면 객체가 있어야 함
     Optional<BoardLike> findByBoardAndMember(Board board, Member member);
 
 }
