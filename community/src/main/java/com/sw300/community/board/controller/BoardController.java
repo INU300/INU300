@@ -1,5 +1,6 @@
 package com.sw300.community.board.controller;
 
+import com.sw300.community.board.dto.BoardInput;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.service.BoardService;
 import com.sw300.community.dto.PageRequestDto;
@@ -51,6 +52,14 @@ public class BoardController {
     @GetMapping("/board/saveForm")
     public String saveForm() {
         return "board/saveForm";
+    }
+
+    // 게시글 작성 페이지
+    @GetMapping("/board/addBoard")
+    public String openPostWrite(Model model) {
+        // BoardInput 객체를 생성하여 모델에 추가
+        model.addAttribute("boardInput", new BoardInput());
+        return "/board/addBoard";
     }
 
     @GetMapping("/board/{id}")

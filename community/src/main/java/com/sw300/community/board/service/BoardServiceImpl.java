@@ -10,12 +10,18 @@ import com.sw300.community.board.model.BoardLike;
 import com.sw300.community.board.repository.BoardHitsRepository;
 import com.sw300.community.board.repository.BoardLikeRepository;
 import com.sw300.community.board.repository.BoardRepository;
-import com.sw300.community.member.dto.MemberCategoryDto;
+import com.sw300.community.category.repository.CategoryRepository;
 import com.sw300.community.dto.PageRequestDto;
 import com.sw300.community.dto.PageResponseDto;
+import com.sw300.community.member.dto.MemberCategoryDto;
 import com.sw300.community.member.model.Member;
-import com.sw300.community.category.repository.CategoryRepository;
 import com.sw300.community.member.repository.MemberRepository;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +29,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -52,8 +52,6 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.save(Board.builder()
                 .title(boardInput.getTitle())
                 .contents(boardInput.getContents())
-                // 카테고리 string을 카테고리 repository에서 find name으로 해서 객체 가져오고
-                // 여기에 넣기
                 .category(boardInput.getCategory())
                 .member(boardInput.getMember())
                 .regDate(LocalDateTime.now())
@@ -178,7 +176,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public ServiceResult setBoarUnLike(Long id, String email) {
+    public ServiceResult setBoardUnLike(Long id, String email) {
 
         Optional<Board> optionalBoard = boardRepository.findById(id);
         if (!optionalBoard.isPresent()) {
@@ -201,6 +199,17 @@ public class BoardServiceImpl implements BoardService {
         boardLikeRepository.delete(boardLike);
 
         return ServiceResult.success();
+    }
+
+    @Override
+    public ServiceResult<Page<Board>> getPopularBoardsToday(Pageable pageable) {
+        LocalDate today = LocalDate.now();
+        Page<Board> popularBoards = boardRepository.findPopularBoardsByDate(today, pageable);
+
+        if (popularBoards.isEmpty()) {
+            return ServiceResult.fail("오늘의 인기 게시글이 없습니다.");
+        }
+        return ServiceResult.success(popularBoards);
     }
 
     @Override
