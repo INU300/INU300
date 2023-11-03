@@ -1,10 +1,10 @@
-package com.sw300.community.service;
+package com.sw300.community.message.service;
 
-import com.sw300.community.dto.MessageDto;
+import com.sw300.community.message.dto.MessageDto;
 import com.sw300.community.member.model.Member;
 import com.sw300.community.member.repository.MemberRepository;
-import com.sw300.community.model.Message;
-import com.sw300.community.repository.MessageRepository;
+import com.sw300.community.message.model.Message;
+import com.sw300.community.message.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

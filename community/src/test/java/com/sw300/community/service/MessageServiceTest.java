@@ -1,14 +1,12 @@
 package com.sw300.community.service;
-
-import com.sw300.community.dto.MessageDto;
-import com.sw300.community.model.Member;
-import com.sw300.community.model.Message;
+import com.sw300.community.member.model.Member;
+import com.sw300.community.message.dto.MessageDto;
+import com.sw300.community.message.model.Message;
+import com.sw300.community.message.service.MessageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

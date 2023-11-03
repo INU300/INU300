@@ -1,4 +1,4 @@
-package com.sw300.community.controller;
+package com.sw300.community.common.controller;
 
 import com.sw300.community.member.model.Member;
 import com.sw300.community.category.service.CategoryService;

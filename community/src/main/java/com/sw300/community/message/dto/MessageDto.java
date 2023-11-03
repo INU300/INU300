@@ -1,9 +1,9 @@
-package com.sw300.community.dto;
+package com.sw300.community.message.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sw300.community.model.Message;
+import com.sw300.community.message.model.Message;
 import lombok.*;
 
 import javax.validation.constraints.Email;

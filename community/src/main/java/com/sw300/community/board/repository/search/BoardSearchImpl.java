@@ -1,4 +1,4 @@
-package com.sw300.community.repository.search;
+package com.sw300.community.board.repository.search;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;

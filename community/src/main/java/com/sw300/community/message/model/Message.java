@@ -1,4 +1,4 @@
-package com.sw300.community.model;
+package com.sw300.community.message.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sw300.community.member.model.Member;

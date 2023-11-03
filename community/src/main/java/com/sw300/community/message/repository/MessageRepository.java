@@ -1,7 +1,7 @@
-package com.sw300.community.repository;
+package com.sw300.community.message.repository;
 
 import com.sw300.community.member.model.Member;
-import com.sw300.community.model.Message;
+import com.sw300.community.message.model.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

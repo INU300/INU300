@@ -4,8 +4,8 @@ import com.sw300.community.board.common.ServiceResult;
 import com.sw300.community.board.dto.BoardInput;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.member.dto.MemberCategoryDto;
-import com.sw300.community.dto.PageRequestDto;
-import com.sw300.community.dto.PageResponseDto;
+import com.sw300.community.common.dto.PageRequestDto;
+import com.sw300.community.common.dto.PageResponseDto;
 
 import java.util.List;
 
