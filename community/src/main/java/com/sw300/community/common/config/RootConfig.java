@@ -1,4 +1,4 @@
-package com.sw300.community.config;
+package com.sw300.community.common.config;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
