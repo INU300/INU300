@@ -57,7 +57,7 @@
                             <td>
                                 <a th:href="@{/board/{id}(id=${dto.id})}"> [[${dto.title}]] </a>
                             </td>
-                            <td>[[${#dates.format(dto.createDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                            <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
                         </tr>
 
                         </tbody>

@@ -24,7 +24,7 @@
                             <td>
                                 <a th:href="@{/board/{id}(id=${dto.id})}"> [[${dto.title}]] </a>
                             </td>
-                            <td>[[${#dates.format(dto.createDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                            <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
                         </tr>
 
                         </tbody>
@@ -97,18 +97,37 @@
     }
 
     function printList(dtoList) { // 게시글 목록 출력
+
+        // 날짜 형식을 만들기 위한 함수
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = (date.getMonth() + 1).toString().padStart(2, '0');
+            var day = date.getDate().toString().padStart(2, '0');
+            var hours = date.getHours().toString().padStart(2, '0');
+            var minutes = date.getMinutes().toString().padStart(2, '0');
+            var seconds = date.getSeconds().toString().padStart(2, '0');
+
+            return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+        }
+
         let str = '';
 
         if(dtoList && dtoList.length > 0) {
 
             for (const dto of dtoList) {
 
+                // LocalDateTime 필드에서 Date 객체 추출
+                var date = new Date(dto.regDate);
+
+                // 원하는 형식으로 날짜를 출력
+                var formattedDate = formatDate(date);
+
                 str += `<tr>
                             <th scope="row">${dto.id}</th>
                             <td>
                                 <a href="/board/${dto.id}"> ${dto.title} </a>
                             </td>
-                            <td>${dto.createDate}</td>
+                            <td>${formattedDate}</td>
                         </tr>`;
             }
             postList.innerHTML = str;
