@@ -1,7 +1,9 @@
 package com.sw300.community.board.dto;
 
+import com.sw300.community.board.model.Board;
 import com.sw300.community.category.model.Category;
 import com.sw300.community.member.model.Member;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +15,11 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Data
 @Builder
-public class BoardInput {
+public class BoardDTO {
 
-    private Member member;
+    private String category;
 
-    private Category category;
+    private String member;
 
     @NotBlank(message = "게시판 제목은 필수 항목입니다.")
     private String title;
