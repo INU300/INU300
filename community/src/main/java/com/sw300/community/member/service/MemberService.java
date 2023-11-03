@@ -40,11 +40,11 @@ public class MemberService {
         memberSaveDto.setPassword(passwordEncoder.encode(memberSaveDto.getPassword()));
         Member newMem = memberRepository.save(memberSaveDto.toEntity());
         //임의로 자주가는 게시판설정
-        viewAddCount(categoryRepository.findByName("1게시판").get().getCno(), newMem.getEmail());
-        viewAddCount(categoryRepository.findByName("2게시판").get().getCno(), newMem.getEmail());
-        viewAddCount(categoryRepository.findByName("3게시판").get().getCno(), newMem.getEmail());
-        viewAddCount(categoryRepository.findByName("4게시판").get().getCno(), newMem.getEmail());
-        viewAddCount(categoryRepository.findByName("5게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("유머게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("고민게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("썰게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("취업게시판").get().getCno(), newMem.getEmail());
+        viewAddCount(categoryRepository.findByName("방송게시판").get().getCno(), newMem.getEmail());
 
         return newMem.getId();
     }

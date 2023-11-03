@@ -27,7 +27,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public List<CategoryDto> getAllCategory() {
-        List<Category> result = categoryRepository.findAll();
+        List<Category> result = categoryRepository.findBySubclassFalse();
 
         List<CategoryDto> dtoList = result.stream()
                 .map(category -> modelMapper.map(category,CategoryDto.class)).collect(Collectors.toList());
