@@ -1,8 +1,8 @@
 package com.sw300.community.board.repository;
 
 import com.sw300.community.board.model.Board;
-import com.sw300.community.repository.search.BoardSearch;
 import java.time.LocalDate;
+import com.sw300.community.board.repository.search.BoardSearch;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

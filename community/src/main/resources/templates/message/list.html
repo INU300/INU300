@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>쪽지함</title>
+    <style>
+        #popup{
+            position:fixed; width:100%; height:100%; background: rgba(0,0,0,0.8); top:0; left:0; display:none;
+        }
+
+        #popup_content{
+            width:50%; height:60%;
+            background:#fff; border-radius:10px;
+            position:absolute; top:20%; left:25%;
+            trasform: translate(-50%, -50%);
+            text-align:center;
+            box-sizing:border-box; padding:74px 0;
+            line-height:23px; cursor:pointer;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $(".receivedMessageContent").click(function (event) {
+                $("#popup").fadeIn();
+                const messageJson = event.target.getAttribute("messageDto");
+                const messageDto = JSON.parse(messageJson);
+                $("#member").val(messageDto.senderNickname);
+                $("#memberText").text("보낸 사람");
+                $("#content").text(messageDto.content);
+
+                $("#deleteButton").click(function () {
+
+                    $.ajax({
+                        url: "/api/message/received/" + messageDto.id,
+                        type: "POST",
+                        success: function(response) {
+                            if (response.status === "NO_CONTENT") {
+                                alert(response.data);
+                                // 뒤로 갈 히스토리가 있으면 뒤로가기, 없으면 홈 화면으로 이동
+                                window.location.replace("/message/list");
+                            }
+                        },
+                        error: function(error) {
+                            alert("오류 발생: [" + error.status + "] " + error.statusText);
+                        }
+                    });
+                })
+            })
+
+            $(".sentMessageContent").click(function (event) {
+                $("#popup").fadeIn();
+                const messageJson = event.target.getAttribute("messageDto");
+                const messageDto = JSON.parse(messageJson);
+                $("#member").val(messageDto.receiverNickname);
+                $("#memberText").text("받은 사람");
+                $("#content").text(messageDto.content);
+
+                $("#deleteButton").click(function () {
+
+                    $.ajax({
+                        url: "/api/message/sent/" + messageDto.id,
+                        type: "POST",
+                        success: function(response) {
+                            if (response.status === "NO_CONTENT") {
+                                alert(response.data);
+                                // 뒤로 갈 히스토리가 있으면 뒤로가기, 없으면 홈 화면으로 이동
+                                window.location.replace("/message/list");
+                            }
+                        },
+                        error: function(error) {
+                            alert("오류 발생: [" + error.status + "] " + error.statusText);
+                        }
+                    });
+                })
+            })
+
+            $("#closeButton").click(function(){
+                $("#popup").fadeOut();
+                $("#deleteButton").attr('onclick', '').unbind('click');
+            });
+
+
+
+        });
+    </script>
+</head>
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    받은 쪽지함
+                </div>
+                <div class="card-body">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">보낸사람</th>
+                            <th scope="col">내용</th>
+                            <th scope="col">받은날짜</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="messageDto:${receivedMessageDtos}" >
+                            <th scope="row">[[${messageDto.senderNickname}]]</th>
+                            <td class="receivedMessageContent" th:messageDto="${messageDto.toJson()}">[[${messageDto.content}]]</td>
+                            <td>[[${#dates.format(messageDto.sendDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>  <!--end card-body-->
+            </div>  <!--end card-->
+        </div>  <!--end col-->
+    </div>  <!--end row-->
+
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    보낸 쪽지함
+                </div>
+                <div class="card-body">
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">받은 사람</th>
+                            <th scope="col">내용</th>
+                            <th scope="col">보낸 날짜</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="messageDto:${sentMessageDtos}">
+                            <th scope="row">[[${messageDto.receiverNickname}]]</th>
+                            <td class="sentMessageContent" th:messageDto="${messageDto.toJson()}">[[${messageDto.content}]]</td>
+                            <td>[[${#dates.format(messageDto.sendDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>  <!--end card-body-->
+            </div>  <!--end card-->
+        </div>  <!--end col-->
+    </div>  <!--end row-->
+
+    <div id="popup">
+        <div class="row mt-3" id="popup_content" title="클릭하면 창이 닫힙니다.">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            쪽지 자세히
+                        </div>
+                        <div class="card-body">
+                            <form id="messageSendForm">
+                                <input type="hidden" name="senderEmail" th:value="${member.email}" />
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="memberText">받은 사람/보낸사람</span>
+                                    <input type="text" readonly id="member" class="form-control">
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">내용</span>
+                                    <textarea readonly class="form-control col-sm-5" id="content"></textarea>
+                                </div>
+
+                                <div class="my-4">
+                                    <div class="float-end">
+                                        <button type="button" id="deleteButton" class="btn btn-primary">삭제</button>
+                                        <button type="button" id="closeButton" class="btn btn-secondary">닫기</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div><!--end card body-->
+
+                    </div><!--end card-->
+                </div><!-- end col-->
+        </div>
+    </div>
+
+</div>
