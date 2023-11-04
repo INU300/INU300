@@ -4,54 +4,66 @@
       layout:decorate="~{layout/basic.html}">
 
 <head>
-  <title>Board Register</title>
+    <title>Board Register</title>
 </head>
 
 <div layout:fragment="content">
-  <div class="row mt-3">
-    <div class="col">
-      <div class="card">
-        <div class="card-header">
-          Board Register
-        </div>
-        <div class="card-body">
-          <form action="/board/register" method="post">
-            <div class="input-group mb-3">
-              <span class="input-group-text">Title</span>
-              <input type="text" name="title" class="form-control" placeholder="Title">
-            </div>
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Board Register
+                </div>
 
-            <div class="input-group mb-3">
-              <span class="input-group-text">Content</span>
-              <textarea class="form-control col-sm-5" rows="5" name="contents"></textarea>
-            </div>
+                <div class="card-body">
+                    <form action="/board/register" method="post">
 
-            <div class="input-group mb-3">
-              <span class="input-group-text">Category</span>
-              <input type="text" name="category" class="form-control" placeholder="Category">
-            </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Title</span>
+                            <input type="text" name="title" class="form-control" placeholder="Title">
+                        </div>
 
-            <div class="input-group mb-3">
-              <span class="input-group-text">Writer</span>
-              <input type="text" name="member" class="form-control" placeholder="Writer">
-            </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Content</span>
+                            <textarea class="form-control col-sm-5" rows="5" name="contents"></textarea>
+                        </div>
 
-            <div class="my-4">
-              <div class="float-end">
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="reset" class="btn btn-secondary">Reset</button>
-              </div>
-            </div>
-          </form>
-        </div><!--end card body-->
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
 
-      </div><!--end card-->
-    </div><!-- end col-->
-  </div><!-- end row-->
+                    </form>
+                </div><!--end card body-->
+
+            </div><!--end card-->
+        </div><!-- end col-->
+    </div><!-- end row-->
+
+
 </div>
 
 
 <script layout:fragment="script" th:inline="javascript">
 
+    const errors = [[${errors}]]
+    console.log(errors)
+
+    let errorMsg = ''
+
+    if (errors) {
+        for (let i = 0; i < errors.length; i++) {
+            errorMsg += `${errors[i].field}은(는) ${errors[i].code} \n`
+        }
+        alert(errorMsg)
+    }
+
+    const result = [[${result}]]
+
+    if(result) {
+        alert(result)
+    }
 
 </script>

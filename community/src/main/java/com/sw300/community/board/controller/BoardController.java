@@ -52,6 +52,10 @@ public class BoardController {
         return responseDto;
     }
 
+    @GetMapping("/board/result")
+    public void result(){
+    }
+
     // 게시글 작성 페이지
     @GetMapping("/board/register")
     public void registerGET(){

@@ -2,6 +2,7 @@ package com.sw300.community.board.service;
 
 import com.sw300.community.board.common.ServiceResult;
 import com.sw300.community.board.dto.BoardDTO;
+import com.sw300.community.board.dto.BoardInput;
 import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.member.dto.MemberCategoryDto;
@@ -17,7 +18,7 @@ public interface BoardService {
     /**
      * 게시글 추가
      */
-    Long register(BoardDTO boardDTO);
+    Long register(BoardInput boardInput);
 
     /**
      * 게시글 조회

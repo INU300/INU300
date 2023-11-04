@@ -3,6 +3,7 @@ package com.sw300.community.board.service;
 
 import com.sw300.community.board.common.ServiceResult;
 import com.sw300.community.board.dto.BoardDTO;
+import com.sw300.community.board.dto.BoardInput;
 import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.model.BoardHits;
@@ -44,22 +45,21 @@ public class BoardServiceImpl implements BoardService {
 
 
     @Override
-    public Long register(BoardDTO boardDTO) {
+    public Long register(BoardInput boardInput) {
 
-        // BoardDTO에서 Board로 변환하기 전에 category와 member를 매핑
-        Board board = modelMapper.map(boardDTO, Board.class);
-
-        Optional<Category> OptionalCategory = categoryRepository.findByName(boardDTO.getCategory());
-        Category category = OptionalCategory.orElseThrow();
-        board.setCategory(category);
-
-        Optional<Member> OptionalMember = memberRepository.findByNickname(boardDTO.getMember());
+        Optional<Member> OptionalMember = memberRepository.findByEmail(boardInput.getMember());
         Member member = OptionalMember.orElseThrow();
-        board.setMember(member);
 
-        board.setRegDate(LocalDateTime.now());
+        Optional<Category> OptionalCategory = categoryRepository.findByName(boardInput.getCategory());
+        Category category = OptionalCategory.orElseThrow();
 
-        return boardRepository.save(board).getId();
+        return  boardRepository.save(Board.builder()
+                .title(boardInput.getTitle())
+                .contents(boardInput.getContents())
+                .member(member)
+                .category(category)
+                .regDate(LocalDateTime.now())
+                .build()).getId();
     }
 
     @Override
@@ -236,5 +236,7 @@ public class BoardServiceImpl implements BoardService {
                 .build();
 
     }
+
+
 
 }

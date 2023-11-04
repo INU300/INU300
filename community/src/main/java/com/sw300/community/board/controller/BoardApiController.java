@@ -3,10 +3,13 @@ package com.sw300.community.board.controller;
 import com.sw300.community.board.common.ResponseResult;
 import com.sw300.community.board.common.ServiceResult;
 import com.sw300.community.board.dto.BoardDTO;
+import com.sw300.community.board.dto.BoardInput;
 import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.service.BoardService;
+import com.sw300.community.board.service.ExternalService;
 import java.security.Principal;
+import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,9 +24,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -34,41 +39,63 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BoardApiController {
 
     private final BoardService boardService;
+    private final ExternalService externalService;
+
+    // 이미지 생성 테스트
+    @PostMapping("/api/image")
+    public ResponseEntity<String> image(@RequestBody Map<String, String> requestData) {
+        try {
+            String result = externalService.generateImage(requestData.get("prompt"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
 
     // 게시글 추가
     @PostMapping("/board/register")
-    public String registerPost(@Valid BoardDTO boardDTO,
-                               BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String registerPost(@Valid @ModelAttribute BoardInput boardInput, Principal principal,
+                               BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
+        // valid 에러 처리
         log.info("board POST register.......");
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("has errors.......");
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/board/register";
         }
 
-        log.info(boardDTO);
+        log.info(principal.getName());
+        boardInput.setMember(principal.getName());
 
-        Long bno  = boardService.register(boardDTO);
+        String title = boardInput.getTitle();
+        String contents = boardInput.getContents();
+        String category = externalService.classifyContent(title, contents);
+        boardInput.setCategory(category);
+
+        // boardInput 데이터 이용
+        log.info(boardInput);
+
+        Long bno = boardService.register(boardInput);
 
         redirectAttributes.addFlashAttribute("result", bno);
 
-        return "redirect:/board/list";
+        return "redirect:/board/result";
     }
 
     // 게시글 수정
     @PostMapping("/board/modify")
-    public String modify( @RequestParam("id") Long id, @Valid BoardDTO boardDTO,
-                          BindingResult bindingResult,
-                          RedirectAttributes redirectAttributes){
+    public String modify(@RequestParam("id") Long id, @Valid BoardDTO boardDTO,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
 
         log.info("board modify post......." + boardDTO);
 
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             log.info("has errors.......");
 
-            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors() );
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
 
             redirectAttributes.addAttribute("id", id);
 
@@ -94,7 +121,7 @@ public class BoardApiController {
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
-        return "redirect:/board/list";
+        return "redirect:/board/result";
 
     }
 

@@ -1,5 +1,6 @@
 package com.sw300.community.board.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sw300.community.category.model.Category;
 import com.sw300.community.member.model.Member;
 import lombok.AllArgsConstructor;
@@ -23,10 +24,12 @@ public class Board {
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     private Member member;
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnore
     private Category category;
 
     @Column
