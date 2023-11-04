@@ -1,7 +1,9 @@
 package com.sw300.community.board.service;
 
 import com.sw300.community.board.common.ServiceResult;
+import com.sw300.community.board.dto.BoardDTO;
 import com.sw300.community.board.dto.BoardInput;
+import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.member.dto.MemberCategoryDto;
 import com.sw300.community.dto.PageRequestDto;
@@ -16,17 +18,22 @@ public interface BoardService {
     /**
      * 게시글 추가
      */
-    ServiceResult addBoard(BoardInput boardInput, String email);
+    Long register(BoardInput boardInput);
+
+    /**
+     * 게시글 조회
+     */
+    BoardDTO readOne(Long bno);
 
     /**
      * 게시글 수정
      */
-    ServiceResult updateBoard(Long id, BoardInput boardInput, String email);
+    void modify(Long bno, BoardDTO boardDTO);
 
     /**
      * 게시글 삭제
      */
-    ServiceResult deleteBoard(Long id, String email);
+    void remove(Long bno);
 
     /**
      * 게시글의 조회수 증가
@@ -36,12 +43,7 @@ public interface BoardService {
     /**
      * 게시글의 좋아요 기능
      */
-    ServiceResult setBoardLike(Long id, String email);
-
-    /**
-     * 게시글의 좋아요를 취소
-     */
-    ServiceResult setBoardUnLike(Long id, String email);
+    ServiceResult setBoardLike(Long id, String email, LikeStatus status);
 
     ServiceResult<Page<Board>> getPopularBoardsToday(Pageable pageable);
 
