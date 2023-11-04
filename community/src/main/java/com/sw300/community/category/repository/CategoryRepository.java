@@ -17,4 +17,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findBySubclassFalse();
 
     Optional<Category> findByName(String name);
+
+    @Query("SELECT c.name FROM Category c WHERE c.isSubclass = false")
+    List<String> findAllMainCategoryNames();
 }

@@ -10,6 +10,7 @@ import com.sw300.community.board.service.BoardService;
 import com.sw300.community.board.service.ExternalService;
 import java.security.Principal;
 import java.util.Map;
+import java.util.Objects;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -45,7 +46,29 @@ public class BoardApiController {
     @PostMapping("/api/image")
     public ResponseEntity<String> image(@RequestBody Map<String, String> requestData) {
         try {
-            String result = externalService.generateImage(requestData.get("prompt"));
+            String result = externalService.generateImage(requestData.get("title"), requestData.get("contents"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
+
+    // 폭력성 판단 테스트
+    @PostMapping("/api/violence")
+    public ResponseEntity<String> violence (@RequestBody Map<String, String> requestData) {
+        try {
+            String result = externalService.hasViolence(requestData.get("title"), requestData.get("contents"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
+
+    // 카테고리 분류 테스트
+    @PostMapping("/api/category")
+    public ResponseEntity<String> category (@RequestBody Map<String, String> requestData) {
+        try {
+            String result = externalService.classifyContent(requestData.get("title"), requestData.get("contents"));
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
@@ -66,12 +89,22 @@ public class BoardApiController {
             return "redirect:/board/register";
         }
 
+        // 작성자 정보
         log.info(principal.getName());
         boardInput.setMember(principal.getName());
 
+        // 폭력성 판단
         String title = boardInput.getTitle();
         String contents = boardInput.getContents();
-        String category = externalService.classifyContent(title, contents);
+        String category = "";
+        String violence = externalService.hasViolence(title, contents);
+
+        // 카테고리 분류
+        if (Objects.equals(violence, "1")) {
+            category = "쓰레기통";
+        } else if (Objects.equals(violence, "0")) {
+            category = externalService.classifyContent(title, contents);
+        }
         boardInput.setCategory(category);
 
         // boardInput 데이터 이용
@@ -80,6 +113,7 @@ public class BoardApiController {
         Long bno = boardService.register(boardInput);
 
         redirectAttributes.addFlashAttribute("result", bno);
+        redirectAttributes.addFlashAttribute("category", category);
 
         return "redirect:/board/result";
     }

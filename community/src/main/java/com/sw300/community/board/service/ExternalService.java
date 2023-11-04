@@ -11,6 +11,11 @@ public interface ExternalService {
     /**
      * 이미지 생성 dalle
      */
-    String generateImage(String prompt);
+    String generateImage(String title, String contents);
+
+    /**
+     * 폭력성 여부 gpt
+     */
+    String hasViolence(String title, String contents);
 }
 

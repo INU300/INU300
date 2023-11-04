@@ -1,8 +1,9 @@
 package com.sw300.community.board.service;
 
-
 import com.sw300.community.board.repository.BoardRepository;
 import com.sw300.community.category.repository.CategoryRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpPost;
@@ -45,15 +46,19 @@ public class ExternalServiceImpl implements ExternalService {
             // 시스템 메시지
             JSONObject systemMessage = new JSONObject();
             systemMessage.put("role", "system");
-            systemMessage.put("content", "대답은 '무엇' 이렇게 단어만 말해줘. 다른 말은 하지 말고.");
+            systemMessage.put("content", "대답은 무슨게시판 이렇게 무슨 게시판인지 단어만 말해줘. 다른 말은 하지 말고.");
             messages.put(systemMessage);
+
+            List<String> mainCategoryNames = categoryRepository.findAllMainCategoryNames();
+            String categoriesString = mainCategoryNames.stream()
+                    .collect(Collectors.joining(", ", "[", "]"));
 
             // 사용자 메시지
             JSONObject userMessage = new JSONObject();
             userMessage.put("role", "user");
-            userMessage.put("content", "제목은 " + title +
-                    "이고, 내용은 " + contents +
-                    "이야. 이 글을 연애/건강/취업 중에서 카테고리 분류해줘.");
+            userMessage.put("content", "제목은 \"" + title +
+                    "\"이고, 내용은 \"" + contents +
+                    "\"이야. 이 글을 " + categoriesString + " 중에서 카테고리 분류해줘.");
             messages.put(userMessage);
 
             System.out.println("Messages: " + messages.toString());
@@ -81,14 +86,17 @@ public class ExternalServiceImpl implements ExternalService {
         }
     }
 
-    public String generateImage(String prompt) {
+    public String generateImage(String title, String contents) {
 
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPost httpPost = new HttpPost(DALLE_URL);
 
             // JSON 요청 본문 생성
             JSONObject json = new JSONObject();
-            json.put("prompt", prompt);
+            json.put("prompt", "제목은 \"" + title +
+                    "\"이고, 내용은 \"" + contents + "\"이야. "
+                    + "I want to edify the person who wrote this violent article. "
+                    + "Draw a picture that will lighten the writer's mood and make him feel better.");
             json.put("n", 1);
             json.put("size", "512x512");
 
@@ -115,6 +123,56 @@ public class ExternalServiceImpl implements ExternalService {
             return imageUrl;
         } catch (Exception e) {
             logger.error("Error while generating image:", e);
+            return e.getMessage();
+        }
+    }
+
+    @Override
+    public String hasViolence(String title, String contents) {
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpPost httpPost = new HttpPost(GPT_URL);
+
+            JSONObject json = new JSONObject();
+            json.put("model", "gpt-4-0613");
+
+            JSONArray messages = new JSONArray();
+
+            // 시스템 메시지
+            JSONObject systemMessage = new JSONObject();
+            systemMessage.put("role", "system");
+            systemMessage.put("content", "대답은 0 또는 1 둘 중 하나로만 해줘. 다른 말은 하지 말고.");
+            messages.put(systemMessage);
+
+            // 사용자 메시지
+            JSONObject userMessage = new JSONObject();
+            userMessage.put("role", "user");
+            userMessage.put("content", "제목은 " + title +
+                    "이고, 내용은 " + contents +
+                    "이야. 이 글의 유해성, 폭력성을 5단계로 분석해서 4단계 이상에 해당하는지 판단해줘. 4단계 이상이면 1, 아니면 0으로 대답해줘.");
+            messages.put(userMessage);
+
+            System.out.println("Messages: " + messages.toString());
+
+            json.put("messages", messages);
+
+            StringEntity entity = new StringEntity(json.toString(), "UTF-8");
+            httpPost.setEntity(entity);
+            httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            httpPost.setHeader("Authorization", "Bearer " + OPENAI_API_KEY);
+
+            String responseString = EntityUtils.toString(httpClient.execute(httpPost).getEntity(), "UTF-8");
+            logger.info("OpenAI Response: " + responseString);
+
+            JSONObject responseJson = new JSONObject(responseString);
+
+            JSONArray choices = responseJson.getJSONArray("choices");
+            String content = choices.getJSONObject(0).getJSONObject("message").getString("content").trim();
+
+            String firstWord = content.split(" ")[0];
+            return firstWord;
+        } catch (Exception e) {
+            logger.error("Error while classifying content:", e);
             return e.getMessage();
         }
     }
