@@ -1,4 +1,4 @@
-package com.sw300.community.dto;
+package com.sw300.community.common.dto;
 
 import lombok.Builder;
 import lombok.Getter;

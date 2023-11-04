@@ -1,4 +1,4 @@
-package com.sw300.community.repository.search;
+package com.sw300.community.board.repository.search;
 
 import com.sw300.community.board.model.Board;
 import org.springframework.data.domain.Page;

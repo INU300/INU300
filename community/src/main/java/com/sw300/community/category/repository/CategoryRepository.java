@@ -10,7 +10,11 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    @Query("SELECT c FROM Category c ORDER BY c.dailyVisitors DESC")
+    @Query("SELECT c FROM Category c WHERE c.isSubclass = false ORDER BY c.dailyVisitors DESC")
     List<Category> findByDailyVisitors(Pageable pageable);
+
+    @Query("SELECT c FROM Category c WHERE c.isSubclass = false")
+    List<Category> findBySubclassFalse();
+
     Optional<Category> findByName(String name);
 }

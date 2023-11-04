@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>쪽지 보내기</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/message.js}"></script>
+</head>
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    쪽지 보내기
+                </div>
+                <div class="card-body">
+                    <form id="messageSendForm">
+                        <input type="hidden" name="senderEmail" th:value="${member.email}" />
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">받는 사람</span>
+                            <input type="text" name="receiverEmail" class="form-control" placeholder="qwer@naver.com">
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">내용</span>
+                            <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
+                        </div>
+
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-primary">보내기</button>
+                                <button type="reset" class="btn btn-secondary">초기화</button>
+                            </div>
+                        </div>
+                    </form>
+                </div><!--end card body-->
+
+            </div><!--end card-->
+        </div><!-- end col-->
+    </div><!-- end row-->
+</div>
