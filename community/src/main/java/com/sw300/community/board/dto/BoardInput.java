@@ -1,13 +1,12 @@
 package com.sw300.community.board.dto;
 
-import com.sw300.community.category.model.Category;
-import com.sw300.community.member.model.Member;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,13 +14,15 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class BoardInput {
 
-    private Member member;
-
-    private Category category;
-
-    @NotBlank(message = "게시판 제목은 필수 항목입니다.")
+    @NotEmpty
+    @Size(min = 3, max = 50)
     private String title;
 
+    @NotEmpty
     private  String contents;
+
+    private String category;
+
+    private String member;
 
 }
