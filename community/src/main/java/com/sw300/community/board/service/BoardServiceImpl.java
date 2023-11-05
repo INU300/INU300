@@ -146,7 +146,7 @@ public class BoardServiceImpl implements BoardService {
 
         Optional<Board> optionalBoard = boardRepository.findById(id);
         if (!optionalBoard.isPresent()) {
-            return ServiceResult.fail("댓글이 존재하지 않습니다.");
+            return ServiceResult.fail("글이 존재하지 않습니다.");
         }
         Board board = optionalBoard.get();
 

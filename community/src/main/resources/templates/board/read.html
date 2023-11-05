@@ -8,19 +8,19 @@
 </head>
 
 <div layout:fragment="content">
-<!--    <form id="f1">-->
-        <div class="row mt-3">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        Board Read
-                    </div>
-                    <div class="card-body">
-                        <form id="f1" action="/board/modify" method="get">
+    <!--    <form id="f1">-->
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Board Read
+                </div>
+                <div class="card-body">
+                    <form id="f1" action="/board/modify" method="get">
 
-                            <input type="hidden" name="id" th:value="${dto.id}" />
+                        <input type="hidden" name="id" th:value="${dto.id}"/>
 
-                            <div class="input-group mb-3">
+                        <div class="input-group mb-3">
                             <span class="input-group-text">제목</span>
                             <input type="text" class="form-control" th:value="${dto.title}" readonly>
                         </div>
@@ -42,22 +42,37 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">작성일</span>
-                            <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm')}" readonly>
+                            <input type="text" class="form-control"
+                                   th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm')}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">추천 수</span>
+                            <input type="text" class="form-control" th:value="${likeCount}" readonly>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">비추천 수</span>
+                            <input type="text" class="form-control" th:value="${dislikeCount}" readonly>
                         </div>
 
                         <div class="my-4">
-                            <div class="float-end">
+                            <div class="float-end" th:if="${isAuthor}">
                                 <button type="button" class="btn btn-danger removeBtn">삭제</button>
                                 <button type="button" class="btn btn-primary modBtn">수정</button>
                             </div>
+                            <div class="float-end" th:unless="${isAuthor}">
+                                <button type="button" class="btn btn-success recommendBtn" onclick="handleLikeDislike('LIKE')">추천</button>
+                                <button type="button" class="btn btn-warning notRecommendBtn" onclick="handleLikeDislike('DISLIKE')">비추천</button>
+                            </div>
                         </div>
 
-                        </form>
-                    </div><!--end card body-->
-                </div><!--end card-->
-            </div><!-- end col-->
-        </div><!-- end row-->
-<!--    </form>-->
+                    </form>
+                </div><!--end card body-->
+            </div><!--end card-->
+        </div><!-- end col-->
+    </div><!-- end row-->
+    <!--    </form>-->
 </div>
 
 
@@ -98,9 +113,35 @@
 
     const result = [[${result}]];
     const modal = new bootstrap.Modal(document.querySelector(".modal"))
-    if(result) {
+    if (result) {
         modal.show()
     }
 
+    function handleLikeDislike(status) {
+        const id = [[${dto.id}]];      // Thymeleaf 모델에서 글 ID 사용
+        const email = [[${user}]];   // Thymeleaf 모델에서 로그인한 사용자 이메일 사용
 
+        // 추천/비추천 API 엔드포인트 URL 설정
+        const url = `/api/board/${id}/like`;
+
+        // 요청에 보낼 데이터 준비
+        const formData = new FormData();
+        formData.append('status', status);
+        formData.append('email', email);
+
+        // AJAX 요청 실행
+        fetch(url, {
+            method: 'PUT',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                // 응답 데이터 처리
+                console.log(data);
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
 </script>
