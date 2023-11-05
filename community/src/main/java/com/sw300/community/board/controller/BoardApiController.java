@@ -2,7 +2,6 @@ package com.sw300.community.board.controller;
 
 import com.sw300.community.board.common.ResponseResult;
 import com.sw300.community.board.common.ServiceResult;
-import com.sw300.community.board.dto.BoardDTO;
 import com.sw300.community.board.dto.BoardInput;
 import com.sw300.community.board.dto.BoardOutput;
 import com.sw300.community.board.enums.LikeStatus;
@@ -21,8 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +29,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RequiredArgsConstructor
