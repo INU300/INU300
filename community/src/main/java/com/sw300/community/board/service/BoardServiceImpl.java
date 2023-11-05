@@ -4,6 +4,7 @@ package com.sw300.community.board.service;
 import com.sw300.community.board.common.ServiceResult;
 import com.sw300.community.board.dto.BoardDTO;
 import com.sw300.community.board.dto.BoardInput;
+import com.sw300.community.board.dto.BoardOutput;
 import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.model.BoardHits;
@@ -63,36 +64,40 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardDTO readOne(Long bno) {
+    public BoardOutput readOne(Long bno) {
 
         Optional<Board> result = boardRepository.findById(bno);
 
         Board board = result.orElseThrow();
 
-        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
+        BoardOutput boardOutput = BoardOutput.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .contents(board.getContents())
+                .category(board.getCategory().getName())
+                .member(board.getMember().getNickname())
+                .regDate(board.getRegDate())
+                .build();
 
-        boardDTO.setMember(board.getMember().getNickname());
-        boardDTO.setCategory(board.getCategory().getName());
-
-        return boardDTO;
+        return boardOutput;
     }
 
     @Override
-    public void modify(Long bno, BoardDTO boardDTO) {
+    public void modify(BoardOutput boardOutput) {
 
-        Optional<Board> result = boardRepository.findById(bno);
-        Board board = result.orElseThrow();
+        Optional<Board> OptionalBoard = boardRepository.findById(boardOutput.getId());
+        Board board = OptionalBoard.orElseThrow();
 
-        Optional<Category> OptionalCategory = categoryRepository.findByName(boardDTO.getCategory());
+        Optional<Category> OptionalCategory = categoryRepository.findByName(boardOutput.getCategory());
         Category category = OptionalCategory.orElseThrow();
-        board.setCategory(category);
 
-        board.setTitle(boardDTO.getTitle());
-        board.setContents(boardDTO.getContents());
+        board.setTitle(boardOutput.getTitle());
+        board.setContents(boardOutput.getContents());
         board.setCategory(category);
         board.setUpdateDate(LocalDateTime.now());
 
         boardRepository.save(board);
+
     }
 
     @Override

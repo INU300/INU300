@@ -8,7 +8,7 @@
 </head>
 
 <div layout:fragment="content">
-    <form id="f1">
+<!--    <form id="f1">-->
         <div class="row mt-3">
             <div class="col">
                 <div class="card">
@@ -16,8 +16,11 @@
                         Board Read
                     </div>
                     <div class="card-body">
+                        <form id="f1" action="/board/modify" method="get">
 
-                        <div class="input-group mb-3">
+                            <input type="hidden" name="id" th:value="${dto.id}" />
+
+                            <div class="input-group mb-3">
                             <span class="input-group-text">제목</span>
                             <input type="text" class="form-control" th:value="${dto.title}" readonly>
                         </div>
@@ -37,21 +40,24 @@
                             <input type="text" class="form-control" th:value="${dto.member}" readonly>
                         </div>
 
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">작성일</span>
+                            <input type="text" class="form-control" th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm')}" readonly>
+                        </div>
+
                         <div class="my-4">
                             <div class="float-end">
-                                <button type="button" class="btn btn-secondary modBtn">Modify</button>
-                                <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                                <button type="button" class="btn btn-danger removeBtn">삭제</button>
+                                <button type="button" class="btn btn-primary modBtn">수정</button>
                             </div>
                         </div>
 
-
+                        </form>
                     </div><!--end card body-->
-
-
                 </div><!--end card-->
             </div><!-- end col-->
         </div><!-- end row-->
-    </form>
+<!--    </form>-->
 </div>
 
 
@@ -70,33 +76,31 @@
         alert(errorMsg)
     }
 
-    const id = [[${id}]]
-    const formObj = document.querySelector("#f1")
+    const id = [[${dto.id}]]
+    const formObj = document.querySelector("#f1");
+
+    document.querySelector(".removeBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        formObj.action = `/board/remove?id=${id}`
+        formObj.method = 'post'
+        formObj.submit()
+    });
+
 
     document.querySelector(".modBtn").addEventListener("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
 
-        window.location.href = `/board/modify?id=${id}`;
-    }, false);
+        formObj.submit()
+    });
 
-
-    document.querySelector(".removeBtn").addEventListener("click", function (e) {
-        e.preventDefault()
-        e.stopPropagation()
-
-        if (id === null || id === undefined) {
-            console.log('ID가 null 이거나 undefined 입니다.');
-            alert('ID가 null 이거나 undefined 입니다.');
-            return;
-        }
-
-        const form = document.createElement('form');
-        form.method = 'post';
-        form.action = `/board/remove?id=${id}`;
-        document.body.appendChild(form);
-        form.submit();
-    }, false);
+    const result = [[${result}]];
+    const modal = new bootstrap.Modal(document.querySelector(".modal"))
+    if(result) {
+        modal.show()
+    }
 
 
 </script>

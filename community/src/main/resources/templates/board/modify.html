@@ -8,15 +8,14 @@
 </head>
 
 <div layout:fragment="content">
-    <form id="f1">
-
-        <div class="row mt-3">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        Board Modify
-                    </div>
-                    <div class="card-body">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Board Modify
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/board/modify}" method="post" id="f1">
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">제목</span>
@@ -25,13 +24,8 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">내용</span>
-                            <textarea class="form-control col-sm-5" rows="5"
-                                      name="contents">[[${dto.contents}]]</textarea>
-                        </div>
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">게시판</span>
-                            <input type="text" class="form-control" name="category" th:value="${dto.category}" >
+                            <textarea class="form-control col-sm-5" rows="5" name="contents">[[${dto.contents}]]
+                            </textarea>
                         </div>
 
                         <div class="input-group mb-3">
@@ -39,17 +33,23 @@
                             <input type="text" class="form-control" th:value="${dto.member}" name="member" readonly>
                         </div>
 
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">작성일</span>
+                            <input type="text" class="form-control"
+                                   th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm')}" readonly>
+                        </div>
+
                         <div class="my-4">
                             <div class="float-end">
-                                <button type="button" class="btn btn-secondary modBtn">Modify</button>
+                                <button type="button" class="btn btn-primary modBtn">수정</button>
                             </div>
                         </div>
 
-
-                    </div><!--end card body-->
-                </div><!--end card-->
-            </div><!-- end col-->
-        </div><!-- end row-->
+                    </form>
+                </div><!--end card body-->
+            </div><!--end card-->
+        </div><!-- end col-->
+    </div><!-- end row-->
     </form>
 </div>
 
@@ -68,7 +68,7 @@
         alert(errorMsg);
     }
 
-    const id = [[${id}]]
+    const id = [[${dto.id}]]
     const formObj = document.querySelector("#f1");
 
     document.querySelector(".modBtn").addEventListener("click", function (e) {
