@@ -1,6 +1,7 @@
 package com.sw300.community.board.controller;
 
 import com.sw300.community.board.dto.BoardDTO;
+import com.sw300.community.board.dto.BoardOutput;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.service.BoardService;
 import com.sw300.community.common.dto.PageRequestDto;
@@ -61,29 +62,15 @@ public class BoardController {
     public void registerGET(){
     }
 
-    // 게시글 조회, 수정 페이지
-    @GetMapping("/board/read")
-    public void read(Long id, Model model){
+    // 게시글 조회
+    @GetMapping({"/board/read", "/board/modify"})
+    public void read( Long id, Model model){
 
-        BoardDTO boardDTO = boardService.readOne(id);
+        BoardOutput boardOutput = boardService.readOne(id);
 
-        log.info(boardDTO);
+        log.info(boardOutput);
 
-        model.addAttribute("dto", boardDTO);
-        model.addAttribute("id", id);
-
-    }
-
-    @GetMapping( "/board/modify")
-    public void modify(Long id, Model model){
-
-        BoardDTO boardDTO = boardService.readOne(id);
-
-        log.info(boardDTO);
-
-        model.addAttribute("dto", boardDTO);
-        model.addAttribute("id", id);
-
+        model.addAttribute("dto", boardOutput);
     }
 
 }

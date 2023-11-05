@@ -3,6 +3,7 @@ package com.sw300.community.board.service;
 import com.sw300.community.board.common.ServiceResult;
 import com.sw300.community.board.dto.BoardDTO;
 import com.sw300.community.board.dto.BoardInput;
+import com.sw300.community.board.dto.BoardOutput;
 import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.member.dto.MemberCategoryDto;
@@ -23,12 +24,12 @@ public interface BoardService {
     /**
      * 게시글 조회
      */
-    BoardDTO readOne(Long bno);
+    BoardOutput readOne(Long bno);
 
     /**
      * 게시글 수정
      */
-    void modify(Long bno, BoardDTO boardDTO);
+    void modify(BoardOutput boardOutput);
 
     /**
      * 게시글 삭제

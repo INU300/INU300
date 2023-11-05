@@ -4,6 +4,7 @@ import com.sw300.community.board.common.ResponseResult;
 import com.sw300.community.board.common.ServiceResult;
 import com.sw300.community.board.dto.BoardDTO;
 import com.sw300.community.board.dto.BoardInput;
+import com.sw300.community.board.dto.BoardOutput;
 import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.service.BoardService;
@@ -112,35 +113,49 @@ public class BoardApiController {
 
         Long bno = boardService.register(boardInput);
 
-        redirectAttributes.addFlashAttribute("result", bno);
-        redirectAttributes.addFlashAttribute("category", category);
+        String result = String.format("카테고리 분석 결과는 %s", category);
+        redirectAttributes.addFlashAttribute("result", result);
 
         return "redirect:/board/result";
     }
 
     // 게시글 수정
     @PostMapping("/board/modify")
-    public String modify(@RequestParam("id") Long id, @Valid BoardDTO boardDTO,
-                         BindingResult bindingResult,
-                         RedirectAttributes redirectAttributes) {
+    public String modify(BoardOutput boardOutput,
+                         BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-        log.info("board modify post......." + boardDTO);
+        log.info("board modify post......." + boardOutput);
 
         if (bindingResult.hasErrors()) {
             log.info("has errors.......");
 
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
 
-            redirectAttributes.addAttribute("id", id);
+            redirectAttributes.addAttribute("id", boardOutput.getId());
 
-            return "redirect:/board/read?id=" + id;
+            return "redirect:/board/modify";
         }
 
-        boardService.modify(id, boardDTO);
+        // 폭력성 판단
+        String title = boardOutput.getTitle();
+        String contents = boardOutput.getContents();
+        String category = "";
+        String violence = externalService.hasViolence(title, contents);
 
-        redirectAttributes.addFlashAttribute("result", "modified");
+        // 카테고리 분류
+        if (Objects.equals(violence, "1")) {
+            category = "쓰레기통";
+        } else if (Objects.equals(violence, "0")) {
+            category = externalService.classifyContent(title, contents);
+        }
+        boardOutput.setCategory(category);
 
-        redirectAttributes.addAttribute("id", id);
+        log.info(boardOutput);
+
+        boardService.modify(boardOutput);
+
+        redirectAttributes.addFlashAttribute("result", "수정되었습니다.");
+        redirectAttributes.addAttribute("id", boardOutput.getId());
 
         return "redirect:/board/read";
     }
@@ -153,7 +168,7 @@ public class BoardApiController {
 
         boardService.remove(id);
 
-        redirectAttributes.addFlashAttribute("result", "removed");
+        redirectAttributes.addFlashAttribute("result", "삭제되었습니다.");
 
         return "redirect:/board/result";
 
