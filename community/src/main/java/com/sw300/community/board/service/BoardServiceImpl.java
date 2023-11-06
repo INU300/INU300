@@ -3,13 +3,15 @@ package com.sw300.community.board.service;
 
 import com.sw300.community.board.common.ServiceResult;
 import com.sw300.community.board.dto.BoardInput;
-import com.sw300.community.board.exception.AlreadyDeletedException;
+import com.sw300.community.board.dto.BoardOutput;
+import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.model.BoardHits;
 import com.sw300.community.board.model.BoardLike;
 import com.sw300.community.board.repository.BoardHitsRepository;
 import com.sw300.community.board.repository.BoardLikeRepository;
 import com.sw300.community.board.repository.BoardRepository;
+import com.sw300.community.category.model.Category;
 import com.sw300.community.category.repository.CategoryRepository;
 import com.sw300.community.common.dto.PageRequestDto;
 import com.sw300.community.common.dto.PageResponseDto;
@@ -23,12 +25,10 @@ import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @RequiredArgsConstructor
 @Service
@@ -39,83 +39,75 @@ public class BoardServiceImpl implements BoardService {
     private final BoardHitsRepository boardHitsRepository;
     private final MemberRepository memberRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final ModelMapper modelMapper;
+
 
     @Override
-    public ServiceResult addBoard(BoardInput boardInput, String email) {
+    public Long register(BoardInput boardInput) {
 
-        Optional<Member> optionalUser = memberRepository.findByEmail(email);
-        if (!optionalUser.isPresent()) {
-            return ServiceResult.fail("사용자가 존재하지 않습니다.");
-        }
-        Member member = optionalUser.get();
+        Optional<Member> OptionalMember = memberRepository.findByEmail(boardInput.getMember());
+        Member member = OptionalMember.orElseThrow();
 
-        boardRepository.save(Board.builder()
+        Optional<Category> OptionalCategory = categoryRepository.findByName(boardInput.getCategory());
+        Category category = OptionalCategory.orElseThrow();
+
+        return  boardRepository.save(Board.builder()
                 .title(boardInput.getTitle())
                 .contents(boardInput.getContents())
-                .category(boardInput.getCategory())
-                .member(boardInput.getMember())
+                .member(member)
+                .category(category)
                 .regDate(LocalDateTime.now())
-                .build());
-
-        return ServiceResult.success();
+                .build()).getId();
     }
 
     @Override
-    public ServiceResult updateBoard(Long id, BoardInput boardInput, String email) {
+    public BoardOutput readOne(Long bno) {
 
-        Optional<Board> optionalBoard = boardRepository.findById(id);
-        if (!optionalBoard.isPresent()) {
-            return ServiceResult.fail("게시글이 존재하지 않습니다.");
-        }
-        Board board = optionalBoard.get();
+        Optional<Board> result = boardRepository.findById(bno);
 
-        Optional<Member> optionalUser = memberRepository.findByEmail(email);
-        if (!optionalUser.isPresent()) {
-            return ServiceResult.fail("사용자가 존재하지 않습니다.");
-        }
-        Member member = optionalUser.get();
+        Board board = result.orElseThrow();
 
-        boardRepository.save(Board.builder()
-                .title(boardInput.getTitle())
-                .contents(boardInput.getContents())
-                .category(boardInput.getCategory())
-                .member(boardInput.getMember())
-                .updateDate(LocalDateTime.now())
-                .build());
+        BoardOutput boardOutput = BoardOutput.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .contents(board.getContents())
+                .category(board.getCategory().getName())
+                .member(board.getMember().getNickname())
+                .regDate(board.getRegDate())
+                .build();
 
-        return ServiceResult.success();
-    }
-
-    @ExceptionHandler(AlreadyDeletedException.class)
-    public ResponseEntity<String> handlerAlreadyDeletedException(AlreadyDeletedException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.OK);
+        return boardOutput;
     }
 
     @Override
-    public ServiceResult deleteBoard(Long id, String email) {
+    public void modify(BoardOutput boardOutput) {
 
-        Optional<Board> optionalBoard = boardRepository.findById(id);
-        if (!optionalBoard.isPresent()) {
-            return ServiceResult.fail("게시글이 존재하지 않습니다.");
-        }
-        Board board = optionalBoard.get();
+        Optional<Board> OptionalBoard = boardRepository.findById(boardOutput.getId());
+        Board board = OptionalBoard.orElseThrow();
 
-        Optional<Member> optionalUser = memberRepository.findByEmail(email);
-        if (!optionalUser.isPresent()) {
-            return ServiceResult.fail("사용자가 존재하지 않습니다.");
-        }
-        Member member = optionalUser.get();
+        Optional<Category> OptionalCategory = categoryRepository.findByName(boardOutput.getCategory());
+        Category category = OptionalCategory.orElseThrow();
 
-        if (board.isDeleted()) {
-            throw new AlreadyDeletedException("이미 삭제된 글입니다.");
-        }
+        board.setTitle(boardOutput.getTitle());
+        board.setContents(boardOutput.getContents());
+        board.setCategory(category);
+        board.setUpdateDate(LocalDateTime.now());
+
+        boardRepository.save(board);
+
+    }
+
+    @Override
+    public void remove(Long bno) {
+
+        Optional<Board> result = boardRepository.findById(bno);
+
+        Board board = result.orElseThrow();
 
         board.setDeleted(true);
         board.setDeletedDate(LocalDateTime.now());
 
         boardRepository.save(board);
-
-        return ServiceResult.success();
     }
 
     @Override
@@ -147,56 +139,42 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public ServiceResult setBoardLike(Long id, String email) {
+    public ServiceResult setBoardLike(Long id, String email, LikeStatus status) {
 
         Optional<Board> optionalBoard = boardRepository.findById(id);
         if (!optionalBoard.isPresent()) {
-            return ServiceResult.fail("게시글이 존재하지 않습니다.");
+            return ServiceResult.fail("글이 존재하지 않습니다.");
         }
         Board board = optionalBoard.get();
 
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if (!optionalMember.isPresent()) {
+        Optional<Member> optionalUser = memberRepository.findByEmail(email);
+        if (!optionalUser.isPresent()) {
             return ServiceResult.fail("사용자가 존재하지 않습니다.");
         }
-        Member member = optionalMember.get();
+        Member member = optionalUser.get();
 
-        long boardLikeCount = boardLikeRepository.countByBoardAndMember(board, member);
-        if (boardLikeCount > 0) {
-            return ServiceResult.fail("이미 좋아요한 내용이 있습니다.");
+        Optional<BoardLike> existingLike = boardLikeRepository.findByBoardAndMember(board, member);
+
+        if (existingLike.isPresent()) {
+            // 사용자가 이미 좋아요/싫어요를 한 경우 상태 변경 또는 취소
+            BoardLike boardLike = existingLike.get();
+            if (status == LikeStatus.NONE) {
+                // 상태를 취소하는 경우
+                boardLikeRepository.delete(boardLike);
+            } else {
+                // 상태를 변경하는 경우
+                boardLike.setLikeStatus(status);
+                boardLikeRepository.save(boardLike);
+            }
+        } else if (status != LikeStatus.NONE) {
+            // 새로운 좋아요/싫어요를 추가하는 경우
+            boardLikeRepository.save(BoardLike.builder()
+                    .member(member)
+                    .board(board)
+                    .regDate(LocalDateTime.now())
+                    .likeStatus(status)
+                    .build());
         }
-
-        boardLikeRepository.save(BoardLike.builder()
-                .board(board)
-                .member(member)
-                .regDate(LocalDateTime.now()).build());
-
-        return ServiceResult.success();
-
-    }
-
-    @Override
-    public ServiceResult setBoardUnLike(Long id, String email) {
-
-        Optional<Board> optionalBoard = boardRepository.findById(id);
-        if (!optionalBoard.isPresent()) {
-            return ServiceResult.fail("게시글이 존재하지 않습니다.");
-        }
-        Board board = optionalBoard.get();
-
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        if (!optionalMember.isPresent()) {
-            return ServiceResult.fail("사용자가 존재하지 않습니다.");
-        }
-        Member member = optionalMember.get();
-
-        Optional<BoardLike> optionalBoardLike = boardLikeRepository.findByBoardAndMember(board, member);
-        if (!optionalBoardLike.isPresent()) {
-            return ServiceResult.fail("좋아요한 내용이 없습니다.");
-        }
-        BoardLike boardLike = optionalBoardLike.get();
-
-        boardLikeRepository.delete(boardLike);
 
         return ServiceResult.success();
     }
@@ -215,7 +193,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public Board getPost(long id) {
-        return boardRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("failed to load post : cannot find post id"));
+        return boardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("failed to load post : cannot find post id"));
     }
 
     @Override
@@ -259,5 +238,7 @@ public class BoardServiceImpl implements BoardService {
                 .build();
 
     }
+
+
 
 }

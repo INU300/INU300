@@ -2,7 +2,9 @@ package com.sw300.community.board.service;
 
 
 import com.sw300.community.board.common.ServiceResult;
-import com.sw300.community.board.dto.ReplyInput;
+import com.sw300.community.board.dto.PageRequestDTO;
+import com.sw300.community.board.dto.PageResponseDTO;
+import com.sw300.community.board.dto.ReplyDTO;
 import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.exception.AlreadyDeletedException;
 import com.sw300.community.board.model.Board;
@@ -14,10 +16,14 @@ import com.sw300.community.board.repository.ReplyRepository;
 import com.sw300.community.member.model.Member;
 import com.sw300.community.member.repository.MemberRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,57 +39,35 @@ public class ReplyServiceImpl implements ReplyService {
     private final ReplyLikeRepository replyLikeRepository;
 
     @Override
-    public ServiceResult addReply(ReplyInput replyInput, String email) {
+    public Long addReply(ReplyDTO replyDTO) {
 
-        Optional<Member> optionalUser = memberRepository.findByEmail(email);
-        if (!optionalUser.isPresent()) {
-            return ServiceResult.fail("사용자가 존재하지 않습니다.");
-        }
-        Member member = optionalUser.get();
+        Optional<Member> OptionalMember = memberRepository.findByEmail(replyDTO.getReplier());
+        Member member = OptionalMember.orElseThrow();
 
-        Optional<Board> optionalBoard = boardRepository.findById(replyInput.getBoardId());
-        if (!optionalBoard.isPresent()) {
-            return ServiceResult.fail("게시글이 존재하지 않습니다.");
-        }
-        Board board = optionalBoard.get();
+        Optional<Board> optionalBoard = boardRepository.findById(replyDTO.getBno());
+        Board board = optionalBoard.orElseThrow();
 
-        replyRepository.save(Reply.builder()
+        Long rno = replyRepository.save(Reply.builder()
                 .member(member)
                 .board(board)
-                .contents(replyInput.getContents())
+                .contents(replyDTO.getReplyText())
                 .regDate(LocalDateTime.now())
-                .build());
+                .build()).getId();
 
-        return ServiceResult.success();
+        return rno;
     }
 
     @Override
-    public ServiceResult updateReply(Long id, ReplyInput replyInput, String email) {
+    public void updateReply(ReplyDTO replyDTO) {
 
-        Optional<Reply> optionalReply = replyRepository.findById(id);
-        if (!optionalReply.isPresent()) {
-            return ServiceResult.fail("댓글이 존재하지 않습니다.");
-        }
-        Reply reply = optionalReply.get();
+        Optional<Reply> optionalReply = replyRepository.findById(replyDTO.getRno());
+        Reply reply = optionalReply.orElseThrow();
 
-        Optional<Member> optionalUser = memberRepository.findByEmail(email);
-        if (!optionalUser.isPresent()) {
-            return ServiceResult.fail("사용자가 존재하지 않습니다.");
-        }
-        Member member = optionalUser.get();
-
-        Optional<Board> optionalBoard = boardRepository.findById(replyInput.getBoardId());
-        if (!optionalBoard.isPresent()) {
-            return ServiceResult.fail("게시글이 존재하지 않습니다.");
-        }
-        Board board = optionalBoard.get();
-
-        reply.setContents(replyInput.getContents());
+        reply.setContents(replyDTO.getReplyText());
         reply.setUpdateDate(LocalDateTime.now());
 
         replyRepository.save(reply);
 
-        return ServiceResult.success();
     }
 
     @ExceptionHandler(AlreadyDeletedException.class)
@@ -92,19 +76,11 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public ServiceResult deleteReply(Long id, String email) {
+    public void deleteReply(Long id) {
 
         Optional<Reply> optionalReply = replyRepository.findById(id);
-        if (!optionalReply.isPresent()) {
-            return ServiceResult.fail("댓글이 존재하지 않습니다.");
-        }
-        Reply reply = optionalReply.get();
 
-        Optional<Member> optionalUser = memberRepository.findByEmail(email);
-        if (!optionalUser.isPresent()) {
-            return ServiceResult.fail("사용자가 존재하지 않습니다.");
-        }
-        Member member = optionalUser.get();
+        Reply reply = optionalReply.orElseThrow();
 
         if (reply.isDeleted()) {
             throw new AlreadyDeletedException("이미 삭제된 댓글입니다.");
@@ -115,9 +91,58 @@ public class ReplyServiceImpl implements ReplyService {
 
         replyRepository.save(reply);
 
-        return ServiceResult.success();
-
     }
+
+    @Override
+    public ReplyDTO read(Long rno) {
+
+        Optional<Reply> replyOptional = replyRepository.findById(rno);
+
+        Reply reply = replyOptional.orElseThrow();
+
+        ReplyDTO replyDTO = ReplyDTO.builder()
+                .rno(reply.getId())
+                .bno(reply.getBoard().getId())
+                .replyText(reply.getContents())
+                .replier(reply.getMember().getNickname())
+                .regDate(reply.getRegDate())
+                .modDate(reply.getUpdateDate())
+                .deletedDate(reply.getDeletedDate())
+                .build();
+
+        return replyDTO;
+    }
+
+    @Override
+    public PageResponseDTO<ReplyDTO> getListOfBoard(Long bno, PageRequestDTO pageRequestDTO) {
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage() <=0? 0: pageRequestDTO.getPage() -1,
+                pageRequestDTO.getSize(),
+                Sort.by("id").ascending());
+
+        Page<Reply> result = replyRepository.listOfBoard(bno, pageable);
+
+        List<ReplyDTO> dtoList =
+                result.getContent().stream().map(reply -> {
+                            ReplyDTO replyDTO = ReplyDTO.builder()
+                                    .rno(reply.getId())
+                                    .bno(reply.getBoard().getId())
+                                    .replyText(reply.getContents())
+                                    .replier(reply.getMember().getNickname())
+                                    .regDate(reply.getRegDate())
+                                    .modDate(reply.getUpdateDate())
+                                    .build();
+                            return replyDTO;
+                        })
+                        .collect(Collectors.toList());
+
+        return PageResponseDTO.<ReplyDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
+    }
+
 
     @Override
     public ServiceResult setReplyLike(Long id, String email, LikeStatus status) {
@@ -160,27 +185,5 @@ public class ReplyServiceImpl implements ReplyService {
         return ServiceResult.success();
     }
 
-    @Override
-    public ServiceResult<Reply> getReplyById(Long id) {
-
-        Reply reply = replyRepository.findById(id).orElse(null);
-        if (reply == null) {
-            return ServiceResult.fail("댓글을 찾을 수 없습니다.");
-        }
-        return ServiceResult.success(reply);
-
-    }
-
-    @Override
-    public ServiceResult<Page<Reply>> getRepliesByBoardId(Long boardId, Pageable pageable) {
-
-        Page<Reply> replies = replyRepository.findByBoardId(boardId, pageable);
-
-        if (replies.isEmpty()) {
-            return ServiceResult.fail("해당 게시글에는 댓글이 없습니다.");
-        }
-        return ServiceResult.success(replies);
-
-    }
 
 }

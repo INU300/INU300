@@ -39,6 +39,7 @@ public class MemberController {
     public String join(Model model){
         List<String> schoolDto = memberService.getSchool();
         model.addAttribute("schoolDto",schoolDto);
+        model.addAttribute("categoryDto",categoryService.getAllCategoryForJoin());
         return "/member/joinPage";
     }
 

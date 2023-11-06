@@ -1,6 +1,6 @@
 package com.sw300.community.board.dto;
 
-import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class BoardInput {
+public class BoardOutput {
+
+    private Long id;
 
     @NotEmpty
-    @Size(min = 3, max = 50)
+    @Size(min = 2, max = 50)
     private String title;
 
     @NotEmpty
@@ -24,5 +26,7 @@ public class BoardInput {
     private String category;
 
     private String member;
+
+    private LocalDateTime regDate;
 
 }
