@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpSession;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,13 @@ public class CategoryService {
                 .map(category -> modelMapper.map(category,CategoryDto.class)).collect(Collectors.toList());
 
         return dtoList;
+    }
+
+    public Long getCno(String categoryName) {
+
+        Optional<Category> category = categoryRepository.findByName(categoryName);
+
+        return category.get().getCno();
     }
 
     public static final String LAST_VISIT_TIME_SESSION_KEY = "lastVisitTime";
