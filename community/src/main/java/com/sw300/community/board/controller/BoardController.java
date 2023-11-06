@@ -11,6 +11,8 @@ import com.sw300.community.common.dto.PageResponseDto;
 import com.sw300.community.member.model.Member;
 import com.sw300.community.member.repository.MemberRepository;
 import com.sw300.community.member.service.MemberService;
+import com.sw300.community.message.dto.MessageDto;
+import com.sw300.community.message.service.MessageService;
 import java.security.Principal;
 import java.util.Optional;
 import javax.servlet.http.HttpSession;
@@ -31,6 +33,8 @@ public class BoardController {
     private final CategoryService categoryService;
     private final MemberService memberService;
 
+    private final MessageService messageService;
+
     private final MemberRepository memberRepository;
     private final BoardLikeRepository boardLikeRepository;
 
@@ -46,6 +50,11 @@ public class BoardController {
         PageResponseDto<Board> responseDto = boardService.getPostList(pageRequestDto);
 
         model.addAttribute("responseDto", responseDto);
+
+        MessageDto messageDto = messageService.getComfortMessage(principal.getName());
+
+        // 위로 이미지 코드 "https://lifet-img.s3.ap-northeast-2.amazonaws.com/6b980705-1d57-46a4-8193-ca490d19d00d"
+        model.addAttribute("messageDto", messageDto);
     }
 
     @GetMapping("/board/listing")

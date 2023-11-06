@@ -22,10 +22,6 @@
         </div>
         <div class="list-group list-group-flush">
             <a class="list-group-item list-group-item-action list-group-item-light p-3" th:each="category:${categoryList}" th:href="@{/board/list(cno=${category.cno})}">[[${category.name}]]</a>
-
-            <!--<a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/board/list(cno=1)}">유머게시판</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/board/list(cno=2)}">고민상담게시판</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/board/list(cno=3)}">썰게시판</a>-->
         </div>
     </div>
     <!-- Page content wrapper-->

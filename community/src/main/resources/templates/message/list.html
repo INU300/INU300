@@ -32,11 +32,25 @@
                 $("#memberText").text("보낸 사람");
                 $("#content").text(messageDto.content);
 
+                if (!messageDto.readReceipt) {
+                    $(this).parent('tr').find('td.readReceipt').text('읽음');
+                    event.target.getAttribute("messageDto")
+                    $.ajax({
+                        url: "/api/message/received/" + messageDto.id,
+                        type: "PUT",
+                        success: function(response) {
+                            if (response.status === "CREATED") {
+                                alert(response.data);
+                            }
+                        },
+                    });
+                }
+
                 $("#deleteButton").click(function () {
 
                     $.ajax({
                         url: "/api/message/received/" + messageDto.id,
-                        type: "POST",
+                        type: "DELETE",
                         success: function(response) {
                             if (response.status === "NO_CONTENT") {
                                 alert(response.data);
@@ -63,7 +77,7 @@
 
                     $.ajax({
                         url: "/api/message/sent/" + messageDto.id,
-                        type: "POST",
+                        type: "DELETE",
                         success: function(response) {
                             if (response.status === "NO_CONTENT") {
                                 alert(response.data);
@@ -104,6 +118,7 @@
                             <th scope="col">보낸사람</th>
                             <th scope="col">내용</th>
                             <th scope="col">받은날짜</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
 
@@ -112,6 +127,7 @@
                             <th scope="row">[[${messageDto.senderNickname}]]</th>
                             <td class="receivedMessageContent" th:messageDto="${messageDto.toJson()}">[[${messageDto.content}]]</td>
                             <td>[[${#dates.format(messageDto.sendDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                            <td class="readReceipt" th:text="${messageDto.isReadReceipt() ? '읽음' : ''}"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -135,6 +151,7 @@
                             <th scope="col">받은 사람</th>
                             <th scope="col">내용</th>
                             <th scope="col">보낸 날짜</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
 
@@ -143,6 +160,9 @@
                             <th scope="row">[[${messageDto.receiverNickname}]]</th>
                             <td class="sentMessageContent" th:messageDto="${messageDto.toJson()}">[[${messageDto.content}]]</td>
                             <td>[[${#dates.format(messageDto.sendDate, 'yyyy-MM-dd HH:mm:ss')}]]</td>
+                            <td>
+                                <span th:text="${messageDto.isReadReceipt() ? '읽음' : ''}"></span>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

@@ -6,6 +6,7 @@ import com.sw300.community.message.service.MessageService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -38,5 +39,11 @@ class MessageServiceTest {
         /*MessageDto result = messageService.write(messageDto);
 
         System.out.println("result = " + result);*/
+    }
+
+    @Test
+    @Commit
+    void sendComfortMessageTest(){
+        messageService.sendComfortMessage("위로 글 테스트입니다", "https://lifet-img.s3.ap-northeast-2.amazonaws.com/6b980705-1d57-46a4-8193-ca490d19d00d", "asdfg@naver.com");
     }
 }
