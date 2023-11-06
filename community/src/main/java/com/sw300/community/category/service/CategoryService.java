@@ -35,6 +35,20 @@ public class CategoryService {
         return dtoList;
     }
 
+    public List<CategoryDto> getAllCategoryForJoin() {
+        List<Category> result = categoryRepository.findBySubclassFalse();
+
+        List<CategoryDto> dtoList = result.stream().skip(1)
+                .map(category -> {
+                    CategoryDto dto = new CategoryDto();
+                    dto.setName(category.getName().replace("게시판", ""));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return dtoList;
+    }
+
     public List<CategoryDto> getBestCategory() {
 
         Pageable pageable = PageRequest.of(0, 3); // 상위 3개를 가져오기 위한 페이지 설정
