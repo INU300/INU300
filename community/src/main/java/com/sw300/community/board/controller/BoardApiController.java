@@ -108,14 +108,18 @@ public class BoardApiController {
 
         String category = "";
         String message = "";
+        String imageUrl = "";
 
         // 유해성 분류 이후
         if (Objects.equals(violence, "1")) {
             category = "쓰레기통";
             message = externalService.giveEncouragement(title, contents);
+            imageUrl = externalService.generateImage(title, contents);
+
         } else if (Objects.equals(violence, "0")) {
             category = externalService.classifyContent(title, contents);
         }
+
         boardInput.setCategory(category);
 
         // boardInput 데이터 이용
