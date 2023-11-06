@@ -13,6 +13,8 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
 import javax.validation.Valid;
+
+import com.sw300.community.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,7 @@ public class BoardApiController {
     private final BoardService boardService;
     private final ExternalService externalService;
     private final EmailService emailService;
+    private final MessageService messageService;
 
     // 이미지 생성 테스트
     @PostMapping("/api/image")
@@ -119,6 +122,7 @@ public class BoardApiController {
             imageUrl = externalService.generateImage(title, contents);
 
             emailService.sendMail(principal.getName(),imageUrl,message);
+            messageService.sendComfortMessage(message, imageUrl, principal.getName());
 
         } else if (Objects.equals(violence, "0")) {
             category = externalService.classifyContent(title, contents);
