@@ -7,6 +7,8 @@ import com.sw300.community.common.dto.PageRequestDto;
 import com.sw300.community.common.dto.PageResponseDto;
 import com.sw300.community.category.service.CategoryService;
 import com.sw300.community.member.service.MemberService;
+import com.sw300.community.message.dto.MessageDto;
+import com.sw300.community.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +28,8 @@ public class BoardController {
 
     private final MemberService memberService;
 
+    private final MessageService messageService;
+
     @GetMapping("/board/list")
     public void index(Model model, PageRequestDto pageRequestDto, HttpSession session, Principal principal) {
 
@@ -38,6 +42,11 @@ public class BoardController {
         PageResponseDto<Board> responseDto = boardService.getPostList(pageRequestDto);
 
         model.addAttribute("responseDto", responseDto);
+
+        MessageDto messageDto = messageService.getComfortMessage(principal.getName());
+
+        // 위로 이미지 코드 "https://lifet-img.s3.ap-northeast-2.amazonaws.com/6b980705-1d57-46a4-8193-ca490d19d00d"
+        model.addAttribute("messageDto", messageDto);
     }
 
     @GetMapping("/board/listing")

@@ -117,4 +117,48 @@ public class MessageService {
         }
     }
 
+
+    @Transactional
+    public Object sendComfortMessage (String content, String url, String receiverEmail) { // 글 작성 후 위로 이미지 전송
+
+        Member sender = memberRepository.findByEmail("admin@community.com").orElseThrow();
+        Member receiver = memberRepository.findByEmail(receiverEmail).orElseThrow();
+
+        Message message = Message.builder()
+                .content(content)
+                .image(url)
+                .sender(sender)
+                .receiver(receiver)
+                .build();
+
+        message.deleteBySender();
+
+        messageRepository.save(message);
+
+        return "위로 글 전송";
+    }
+
+    public MessageDto getComfortMessage(String receiverEmail) {
+
+        //Member sender = Member.builder().email("admin@community.com").nickname("관리자").build();
+        Member sender = memberRepository.findByEmail("admin@community.com").orElseThrow();
+        Member receiver = memberRepository.findByEmail(receiverEmail).orElseThrow();
+
+        List<Message> messageList = messageRepository.findBySenderAndReceiver(sender, receiver);
+
+        MessageDto messageDto;
+
+        if (messageList.isEmpty()) {
+            messageDto = null;
+        }
+        else {
+            Message message = messageList.get(0);
+            if (message.isReadReceipt())
+                messageDto = null;
+            else
+                messageDto = MessageDto.builder().message(message).build();
+        }
+
+        return messageDto;
+    }
 }

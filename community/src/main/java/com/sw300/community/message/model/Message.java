@@ -21,6 +21,8 @@ public class Message {
 
     private String content;
 
+    private String image;
+
     // TODO 2023.10.15 읽음 여부 추가해야 함
     @ColumnDefault("false")
     private boolean readReceipt;
@@ -47,8 +49,9 @@ public class Message {
     private Member receiver;
 
     @Builder
-    public Message(String content, Member sender, Member receiver) {
+    public Message(String content, String image, Member sender, Member receiver) {
         this.content = content;
+        this.image = image;
         this.sender = sender;
         this.receiver = receiver;
     }
@@ -64,4 +67,6 @@ public class Message {
     public boolean isDeleted() {
         return isDeletedBySender() && isDeletedByReceiver();
     }
+
+    public void setReadReceipt() { this.readReceipt = true; }
 }

@@ -17,6 +17,8 @@ public class MessageDto {
 
     private String content;
 
+    private String image;
+
     private boolean readReceipt;
 
     private String senderNickname;
@@ -36,6 +38,7 @@ public class MessageDto {
     public MessageDto(Message message) {
         this.id = message.getId();
         this.content = message.getContent();
+        this.image = message.getImage();
         this.readReceipt = message.isReadReceipt();
         this.senderNickname = message.getSender().getNickname();
         this.senderEmail = message.getSender().getEmail();
