@@ -61,8 +61,12 @@
                                 <button type="button" class="btn btn-primary modBtn">수정</button>
                             </div>
                             <div class="float-end" th:unless="${isAuthor}">
-                                <button type="button" class="btn btn-success recommendBtn" onclick="handleLikeDislike('LIKE')">추천</button>
-                                <button type="button" class="btn btn-warning notRecommendBtn" onclick="handleLikeDislike('DISLIKE')">비추천</button>
+                                <button type="button" class="btn btn-success recommendBtn"
+                                        onclick="handleLikeDislike('LIKE')">추천
+                                </button>
+                                <button type="button" class="btn btn-warning notRecommendBtn"
+                                        onclick="handleLikeDislike('DISLIKE')">비추천
+                                </button>
                             </div>
                         </div>
 
@@ -98,12 +102,12 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <span class="input-group-text">Reply Text</span>
-                        <input type="text" class="form-control replyText" >
+                        <input type="text" class="form-control replyText">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary registerBtn">Register</button>
-                    <button type="button" class="btn btn-outline-dark closeRegisterBtn" >Close</button>
+                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -120,17 +124,48 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <span class="input-group-text">Reply Text</span>
-                        <input type="text" class="form-control modifyText" >
+                        <input type="text" class="form-control modifyText">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">추천 수</span>
+                        <span class="likeCount">   0   </span>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">비추천 수</span>
+                        <span class="dislikeCount">   0   </span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-info modifyBtn">Modify</button>
-                    <button type="button" class="btn btn-danger removeBtn">Remove</button>
-                    <button type="button" class="btn btn-outline-dark closeModifyBtn">Close</button>
+                    <button type="button" class="btn btn-info modifyBtn">수정</button>
+                    <button type="button" class="btn btn-danger removeBtn">삭제</button>
+                    <button type="button" class="btn btn-outline-dark closeModifyBtn">닫기</button>
                 </div>
             </div>
         </div>
     </div> <!--modifyModal -->
+
+    <div class="modal likeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title replyLikeHeader"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Reply Text</span>
+                        <input type="text" class="form-control modifyText" readonly>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success likeBtn">추천 <span class="likeCount">0</span></button>
+                    <button type="button" class="btn btn-warning dislikeBtn">비추천 <span class="dislikeCount">0</span></button>
+                    <button type="button" class="btn btn-outline-dark closeLikeBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> <!--likeModal -->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -142,14 +177,15 @@
 <script layout:fragment="script" th:inline="javascript">
 
     const bno = [[${dto.id}]]
+    const nickname = [[${userNick}]];
 
     const replyList = document.querySelector('.replyList') //댓글 목록 DOM
     const replyPaging = document.querySelector('.replyPaging') //페이지 목록 DOM
 
-    function printList(dtoList){ //댓글 목록 출력
+    function printList(dtoList) { //댓글 목록 출력
         let str = '';
 
-        if(dtoList && dtoList.length > 0){
+        if (dtoList && dtoList.length > 0) {
 
             for (const dto of dtoList) {
 
@@ -164,28 +200,28 @@
         replyList.innerHTML = str
     }
 
-    function printPages(data){ //페이지 목록 출력
+    function printPages(data) { //페이지 목록 출력
 
         //pagination
         let pageStr = '';
 
-        if(data.prev) {
-            pageStr +=`<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
+        if (data.prev) {
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start - 1}">PREV</a></li>`
         }
 
-        for(let i = data.start; i <= data.end; i++){
-            pageStr +=`<li class="page-item ${i == data.page?"active":""} "><a class="page-link" data-page="${i}">${i}</a></li>`
+        for (let i = data.start; i <= data.end; i++) {
+            pageStr += `<li class="page-item ${i == data.page ? "active" : ""} "><a class="page-link" data-page="${i}">${i}</a></li>`
         }
 
-        if(data.next) {
-            pageStr +=`<li class="page-item"><a class="page-link" data-page="${data.end +1}">NEXT</a></li>`
+        if (data.next) {
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end + 1}">NEXT</a></li>`
         }
         replyPaging.innerHTML = pageStr
     }
 
-    function printReplies(page,size,goLast){
+    function printReplies(page, size, goLast) {
 
-        getList({bno, page,size, goLast}).then(
+        getList({bno, page, size, goLast}).then(
             data => {
                 printList(data.dtoList) //목록 처리
                 printPages(data) //페이지 처리
@@ -196,7 +232,7 @@
 
     }
 
-    printReplies(1,10, true)
+    printReplies(1, 10, true)
 
 
     //댓글 등록 모달
@@ -205,24 +241,25 @@
     const replyText = document.querySelector(".replyText")
     const closeRegisterBtn = document.querySelector(".closeRegisterBtn")
 
-    document.querySelector(".addReplyBtn").addEventListener("click", function (e){
+    document.querySelector(".addReplyBtn").addEventListener("click", function (e) {
         registerModal.show()
-    },false)
+    }, false)
 
-    closeRegisterBtn.addEventListener("click", function (e){
+    closeRegisterBtn.addEventListener("click", function (e) {
         registerModal.hide()
-    },false)
+    }, false)
 
-    registerBtn.addEventListener("click", function(e){
+    registerBtn.addEventListener("click", function (e) {
         const replyObj = {
-            bno:bno,
-            replyText:replyText.value}
+            bno: bno,
+            replyText: replyText.value
+        }
 
         addReply(replyObj).then(result => {
             alert(result.rno)
             registerModal.hide()
             replyText.value = ''
-            printReplies(1,10, true) //댓글 목록 갱신
+            printReplies(1, 10, true) //댓글 목록 갱신
         }).catch(e => {
             alert("Exception...")
         })
@@ -231,14 +268,14 @@
     let page = 1
     let size = 10
 
-    replyPaging.addEventListener("click", function (e){
+    replyPaging.addEventListener("click", function (e) {
 
         e.preventDefault()
         e.stopPropagation()
 
         const target = e.target
 
-        if(!target || target.tagName != 'A'){
+        if (!target || target.tagName != 'A') {
             return
         }
 
@@ -246,55 +283,85 @@
         page = pageNum
         printReplies(page, size)
 
-    },false)
+    }, false)
 
-
-    //modifyModal
-    const modifyModal = new bootstrap.Modal(document.querySelector(".modifyModal"))
 
     const replyHeader = document.querySelector(".replyHeader")
+    // 댓글 수정/삭제 모달
+    const modifyModal = new bootstrap.Modal(document.querySelector(".modifyModal"))
     const modifyText = document.querySelector(".modifyText")
     const modifyBtn = document.querySelector(".modifyBtn")
     const removeBtn = document.querySelector(".removeBtn")
     const closeModifyBtn = document.querySelector(".closeModifyBtn")
+    // 댓글 추천/비추천 모달
+    const likeModal = new bootstrap.Modal(document.querySelector(".likeModal"))
+    const likeBtn = document.querySelector(".likeBtn")
+    const dislikeBtn = document.querySelector(".dislikeBtn")
+    const closeLikeBtn = document.querySelector(".closeLikeBtn")
 
-    replyList.addEventListener("click", function (e){
+    replyList.addEventListener("click", function (e) {
 
         e.preventDefault()
         e.stopPropagation()
 
         const target = e.target
 
-        if(!target || target.tagName != 'SPAN'){
+        if (!target || target.tagName != 'SPAN') {
             return
         }
 
         const rno = target.getAttribute("data-rno")
 
-        if(!rno){
+        if (!rno) {
             return
         }
 
         getReply(rno).then(reply => { //댓글의 내용을 모달창에 채워서 보여주는
 
             console.log(reply)
+            console.log(reply.replier)
+            console.log(nickname)
+
             replyHeader.innerHTML = reply.rno
-            modifyText.value = reply.replyText
-            modifyModal.show()
+            modifyText.value = reply.replyText;
+
+            const likePromise = getReplyLike(reply.rno, 'LIKE');
+            const dislikePromise = getReplyLike(reply.rno, 'DISLIKE');
+
+            Promise.all([likePromise, dislikePromise]).then(values => {
+                const likeCount = values[0].data;      // API로부터 받은 추천수
+                const dislikeCount = values[1].data;   // API로부터 받은 비추천수
+
+                document.querySelector(".likeCount").innerText = likeCount;
+                document.querySelector(".dislikeCount").innerText = dislikeCount;
+            }).catch(error => {
+                console.error('추천 수 가져오는 중 오류 발생', error);
+            });
+
+            // 선택된 댓글의 작성자가 현재 로그인한 사용자와 같은지 확인
+            if (reply.replier === nickname) {
+                // 수정 모달창
+                modifyModal.show();
+            } else {
+                // 추천 모달창
+                likeModal.show();
+            }
 
         }).catch(e => alert('error'))
 
     },false)
 
-    modifyBtn.addEventListener("click", function(e) {
+    //댓글 수정
+    modifyBtn.addEventListener("click", function (e) {
 
         const replyObj = {
-            bno:bno,
-            rno:replyHeader.innerHTML,
-            replyText:modifyText.value}
+            bno: bno,
+            rno: replyHeader.innerHTML,
+            replyText: modifyText.value
+        }
 
         modifyReply(replyObj).then(result => {
-            alert(result.rno+' 댓글이 수정되었습니다.')
+            alert('댓글이 수정되었습니다.')
             replyText.value = ''
             modifyModal.hide()
             printReplies(page, size)
@@ -302,19 +369,14 @@
         }).catch(e => {
             console.log(e)
         })
-    },false)
-
-    closeModifyBtn.addEventListener("click", function(e){
-
-        modifyModal.hide()
-
     }, false)
 
-    removeBtn.addEventListener("click", function(e) {
+    // 댓글 삭제
+    removeBtn.addEventListener("click", function (e) {
 
         removeReply(replyHeader.innerHTML).then(result => {
 
-            alert(result.rno +' 댓글이 삭제되었습니다.')
+            alert('댓글이 삭제되었습니다.')
             replyText.value = ''
             modifyModal.hide()
 
@@ -325,10 +387,54 @@
         }).catch(e => {
             console.log(e)
         })
-    },false)
+    }, false)
+
+    // 수정/삭제 모달 닫기
+    closeModifyBtn.addEventListener("click", function (e) {
+
+        modifyModal.hide()
+
+    }, false)
+
+    // 댓글 추천
+    likeBtn.addEventListener("click", function (e) {
+
+        likeReply(replyHeader.innerHTML, "LIKE").then(result => {
+            alert('추천이 반영되었습니다.')
+            replyText.value = ''
+            likeModal.hide()
+            printReplies(page, size)
+
+        }).catch(e => {
+            console.log(e)
+        })
+    }, false)
+
+    // 댓글 비추천
+    dislikeBtn.addEventListener("click", function (e) {
+
+        likeReply(replyHeader.innerHTML, "DISLIKE").then(result => {
+
+            alert('비추천이 반영되었습니다.')
+            replyText.value = ''
+            likeModal.hide()
+            printReplies(page, size)
+
+        }).catch(e => {
+            console.log(e)
+        })
+    }, false)
+
+    // 추천/비추천 댓글 닫기
+    closeLikeBtn.addEventListener("click", function (e) {
+
+        likeModal.hide()
+
+    }, false)
 
 
     /*      이하는 글 관련 코드     */
+
 
     const errors = [[${errors}]]
     console.log(errors)
@@ -396,6 +502,5 @@
                 console.error('Error:', error);
             });
     }
-
 
 </script>

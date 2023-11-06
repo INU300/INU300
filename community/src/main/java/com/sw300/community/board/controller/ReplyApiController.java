@@ -6,6 +6,7 @@ import com.sw300.community.board.dto.PageRequestDTO;
 import com.sw300.community.board.dto.PageResponseDTO;
 import com.sw300.community.board.dto.ReplyDTO;
 import com.sw300.community.board.enums.LikeStatus;
+import com.sw300.community.board.repository.ReplyLikeRepository;
 import com.sw300.community.board.service.BoardService;
 import com.sw300.community.board.service.ReplyService;
 import java.security.Principal;
@@ -33,6 +34,8 @@ public class ReplyApiController {
 
     private final BoardService boardService;
     private final ReplyService replyService;
+
+    private final ReplyLikeRepository replyLikeRepository;
 
 
     // 댓글 추가
@@ -63,8 +66,7 @@ public class ReplyApiController {
     @PutMapping(value = "/api/reply/type/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String,Long> updateReply(@PathVariable Long id, @RequestBody ReplyDTO replyDTO) {
 
-
-        replyDTO.setRno(id); //번호를 일치시킴
+        replyDTO.setRno(id);
 
         replyService.updateReply(replyDTO);
 
@@ -112,16 +114,21 @@ public class ReplyApiController {
     // 댓글 추천/비추천 기능
     @PutMapping("/api/reply/{id}/like")
     public ResponseEntity<?> replyLike(@PathVariable Long id,
-                                       @RequestParam("status") LikeStatus status,
-                                       @RequestParam(required = true) String email) {
+                                       @RequestParam("status") LikeStatus status, Principal principal) {
 
-        if (email == null) {
-            return ResponseResult.fail("인증된 사용자가 아닙니다.");
-        }
+        String email = principal.getName();
 
         ServiceResult result = replyService.setReplyLike(id, email, status);
         return ResponseResult.result(result);
     }
 
+    // 댓글 추천수/비추천수 기능
+    @GetMapping("/api/reply/{id}/like")
+    public String replyLike(@PathVariable Long id, @RequestParam("status") LikeStatus status) {
+
+        int likeCount = replyLikeRepository.countByReplyIdAndLikeStatus(id, status);
+
+        return String.valueOf(likeCount);
+    }
 
 }

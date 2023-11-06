@@ -1,4 +1,3 @@
-
 async function getList({bno, page, size, goLast}){
 
     const result = await axios.get(`/api/reply/list/${bno}`, {params: {page, size}})
@@ -34,4 +33,14 @@ async function modifyReply(replyObj) {
 async function removeReply(rno) {
     const response = await axios.post(`/api/reply/type/${rno}`)
     return response.data
+}
+
+async function likeReply(rno, status) {
+    const response = await axios.put(`/api/reply/${rno}/like?status=${status}`)
+    return response.data
+}
+
+async function getReplyLike(rno, status) {
+    const response = await axios.get(`/api/reply/${rno}/like?status=${status}`)
+    return response
 }
