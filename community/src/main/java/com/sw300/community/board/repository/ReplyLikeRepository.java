@@ -1,5 +1,6 @@
 package com.sw300.community.board.repository;
 
+import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.BoardLike;
 import com.sw300.community.board.model.Reply;
 import com.sw300.community.board.model.ReplyLike;
@@ -12,5 +13,8 @@ public interface ReplyLikeRepository extends JpaRepository<ReplyLike, Long> {
     long countByReplyAndMember(Reply reply, Member member);
 
     Optional<ReplyLike> findByReplyAndMember(Reply reply, Member member);
+
+    int countByReplyIdAndLikeStatus(Long replyId, LikeStatus likeStatus);
+
 
 }

@@ -232,10 +232,6 @@ public class BoardApiController {
                                        @RequestParam("status") LikeStatus status,
                                        @RequestParam(required = true) String email) {
 
-        if (email == null) {
-            return ResponseResult.fail("인증된 사용자가 아닙니다.");
-        }
-
         ServiceResult result = boardService.setBoardLike(id, email, status);
         return ResponseResult.result(result);
     }

@@ -79,6 +79,9 @@ public class BoardController {
 
         // 로그인한 사람 정보
         String email = principal.getName();
+        Optional<Member> optionalUser = memberRepository.findByEmail(email);
+        Member user = optionalUser.orElseThrow();
+        String nickname = user.getNickname();
 
         // 작성자 여부 판단
         boolean isAuthor = principal != null && email.equals(member.getEmail());
@@ -90,6 +93,7 @@ public class BoardController {
         model.addAttribute("dto", boardOutput);
         model.addAttribute("isAuthor", isAuthor);
         model.addAttribute("user", email);
+        model.addAttribute("userNick", nickname);
 
         model.addAttribute("likeCount", likeCount);
         model.addAttribute("dislikeCount", dislikeCount);
