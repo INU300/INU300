@@ -26,7 +26,6 @@ public class MessageController {
     @GetMapping("/message/list")
     public void getMessageList(Model model, Principal principal) {
         Member member = memberService.getMember(principal.getName());
-//        Member member = memberService.getMember("asdfg@naver.com");
 
         List<MessageDto> receivedMessageDtos = messageService.getReceivedMessage(member);
         List<MessageDto> sentMessageDtos = messageService.getSentMessage(member);
