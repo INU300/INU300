@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -121,13 +122,14 @@ public class MessageService {
     @Transactional
     public Object sendComfortMessage (String content, String url, String receiverEmail) { // 글 작성 후 위로 이미지 전송
 
-        Member sender = memberRepository.findByEmail("admin@community.com").orElseThrow();
+        Optional<Member> sender = memberRepository.findByEmail("admin@community.com");
+        if (sender.isEmpty()) return "위로 글 전송 실패";
         Member receiver = memberRepository.findByEmail(receiverEmail).orElseThrow();
 
         Message message = Message.builder()
                 .content(content)
                 .image(url)
-                .sender(sender)
+                .sender(sender.get())
                 .receiver(receiver)
                 .build();
 
@@ -140,23 +142,22 @@ public class MessageService {
 
     public MessageDto getComfortMessage(String receiverEmail) {
 
-        //Member sender = Member.builder().email("admin@community.com").nickname("관리자").build();
-        Member sender = memberRepository.findByEmail("admin@community.com").orElseThrow();
+        Optional<Member> sender = memberRepository.findByEmail("admin@community.com");
+        if (sender.isEmpty()) return null;
+
         Member receiver = memberRepository.findByEmail(receiverEmail).orElseThrow();
 
-        List<Message> messageList = messageRepository.findBySenderAndReceiver(sender, receiver);
+        List<Message> messageList = messageRepository.findBySenderAndReceiver(sender.get(), receiver);
 
-        MessageDto messageDto;
+        MessageDto messageDto = null;
 
-        if (messageList.isEmpty()) {
-            messageDto = null;
-        }
-        else {
-            Message message = messageList.get(0);
-            if (message.isReadReceipt())
-                messageDto = null;
-            else
-                messageDto = MessageDto.builder().message(message).build();
+        if (!messageList.isEmpty()) {
+            for (Message message : messageList) {
+                if (!message.isReadReceipt()) {
+                    messageDto = MessageDto.builder().message(message).build();
+                    break;
+                }
+            }
         }
 
         return messageDto;
