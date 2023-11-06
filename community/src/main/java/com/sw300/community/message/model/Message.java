@@ -19,8 +19,10 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition="text")
     private String content;
 
+    @Column(columnDefinition="text")
     private String image;
 
     // TODO 2023.10.15 읽음 여부 추가해야 함
