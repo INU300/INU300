@@ -28,8 +28,8 @@ public class MessageController {
         Member member = memberService.getMember(principal.getName());
 //        Member member = memberService.getMember("asdfg@naver.com");
 
-        List<MessageDto> receivedMessageDtos = messageService.receivedMessage(member);
-        List<MessageDto> sentMessageDtos = messageService.sentMessage(member);
+        List<MessageDto> receivedMessageDtos = messageService.getReceivedMessage(member);
+        List<MessageDto> sentMessageDtos = messageService.getSentMessage(member);
 
         model.addAttribute("receivedMessageDtos", receivedMessageDtos);
         model.addAttribute("sentMessageDtos", sentMessageDtos);
