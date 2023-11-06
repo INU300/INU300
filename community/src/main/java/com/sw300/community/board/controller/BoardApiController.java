@@ -8,6 +8,7 @@ import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.service.BoardService;
 import com.sw300.community.board.service.ExternalService;
+import com.sw300.community.common.service.EmailService;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
@@ -38,6 +39,7 @@ public class BoardApiController {
 
     private final BoardService boardService;
     private final ExternalService externalService;
+    private final EmailService emailService;
 
     // 이미지 생성 테스트
     @PostMapping("/api/image")
@@ -115,6 +117,8 @@ public class BoardApiController {
             category = "쓰레기통";
             message = externalService.giveEncouragement(title, contents);
             imageUrl = externalService.generateImage(title, contents);
+
+            emailService.sendMail(principal.getName(),imageUrl,message);
 
         } else if (Objects.equals(violence, "0")) {
             category = externalService.classifyContent(title, contents);
