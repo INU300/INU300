@@ -12,6 +12,8 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
 import javax.validation.Valid;
+
+import com.sw300.community.common.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -38,6 +40,7 @@ public class BoardApiController {
 
     private final BoardService boardService;
     private final ExternalService externalService;
+    private final EmailService emailService;
 
     // 이미지 생성 테스트
     @PostMapping("/api/image")
@@ -95,6 +98,13 @@ public class BoardApiController {
         String contents = boardInput.getContents();
         String category = "";
         String violence = externalService.hasViolence(title, contents);
+
+        //메일 전송
+        String text="";//위로의 텍스트
+        if(violence.equals("1")){
+            String imageUrl = externalService.generateImage(title,contents);
+            emailService.sendMail(principal.getName(),imageUrl,text);
+        }
 
         // 카테고리 분류
         if (Objects.equals(violence, "1")) {

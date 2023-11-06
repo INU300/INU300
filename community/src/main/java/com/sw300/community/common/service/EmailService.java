@@ -21,7 +21,7 @@ public class EmailService {
 
     private final JavaMailSender javaMailSender;
 
-    public void sendMail(String email, String imageUrl) {
+    public void sendMail(String email, String imageUrl,String text) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -32,8 +32,8 @@ public class EmailService {
 */
 
             // HTML 이메일 본문 작성
-            String emailContent = "<html><body>위로의 이미지<br>"
-                    + "<img src=" + imageUrl + " alt=\"img\"'/></body></html>";
+            String emailContent = "<html><body>"
+                    + "<img src=" + imageUrl + " alt=\"img\"'/><br>"+text+"</body></html>";
             helper.setText(emailContent, true);
 
             // 이메일 전송
