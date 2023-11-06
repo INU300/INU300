@@ -177,4 +177,53 @@ public class ExternalServiceImpl implements ExternalService {
         }
     }
 
+    @Override
+    public String giveEncouragement(String title, String contents) {
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpPost httpPost = new HttpPost(GPT_URL);
+
+            JSONObject json = new JSONObject();
+            json.put("model", "gpt-4-0613");
+
+            JSONArray messages = new JSONArray();
+
+            // 시스템 메시지
+            JSONObject systemMessage = new JSONObject();
+            systemMessage.put("role", "system");
+            systemMessage.put("content", "깨끗한 커뮤니티를 만들기 위한 의도야.");
+            messages.put(systemMessage);
+
+            // 사용자 메시지
+            JSONObject userMessage = new JSONObject();
+            userMessage.put("role", "user");
+            userMessage.put("content", "제목은 " + title +
+                    "이고, 내용은 " + contents +
+                    "이야. 이 글의 작성자에게 위로와 격려의 메시지를 작성해줘.");
+            messages.put(userMessage);
+
+            System.out.println("Messages: " + messages.toString());
+
+            json.put("messages", messages);
+
+            StringEntity entity = new StringEntity(json.toString(), "UTF-8");
+            httpPost.setEntity(entity);
+            httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            httpPost.setHeader("Authorization", "Bearer " + OPENAI_API_KEY);
+
+            String responseString = EntityUtils.toString(httpClient.execute(httpPost).getEntity(), "UTF-8");
+            logger.info("OpenAI Response: " + responseString);
+
+            JSONObject responseJson = new JSONObject(responseString);
+
+            JSONArray choices = responseJson.getJSONArray("choices");
+            String content = choices.getJSONObject(0).getJSONObject("message").getString("content");
+
+            return content;
+        } catch (Exception e) {
+            logger.error("Error while classifying content:", e);
+            return e.getMessage();
+        }
+    }
+
 }

@@ -8,7 +8,6 @@
 </head>
 
 <div layout:fragment="content">
-    <!--    <form id="f1">-->
     <div class="row mt-3">
         <div class="col">
             <div class="card">
@@ -72,11 +71,149 @@
             </div><!--end card-->
         </div><!-- end col-->
     </div><!-- end row-->
-    <!--    </form>-->
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="my-4 ">
+                <button class="btn btn-info  addReplyBtn">ADD REPLY</button>
+            </div>
+            <ul class="list-group replyList">
+            </ul>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <ul class="pagination replyPaging">
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Register Reply</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Reply Text</span>
+                        <input type="text" class="form-control replyText" >
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Replier</span>
+                        <input type="text" class="form-control replier" >
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary registerBtn">Register</button>
+                    <button type="button" class="btn btn-outline-dark closeRegisterBtn" >Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end regist modal -->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/js/reply.js"></script>
+
 </div>
 
 
 <script layout:fragment="script" th:inline="javascript">
+
+    const bno = [[${dto.id}]]
+
+    const replyList = document.querySelector('.replyList') //댓글 목록 DOM
+    const replyPaging = document.querySelector('.replyPaging') //페이지 목록 DOM
+
+    function printList(dtoList){ //댓글 목록 출력
+        let str = '';
+
+        if(dtoList && dtoList.length > 0){
+
+            for (const dto of dtoList) {
+
+                str += `<li class="list-group-item d-flex replyItem">
+                      <span class="col-2">${dto.rno}</span>
+                      <span class="col-6" data-rno="${dto.rno}">${dto.replyText}</span>
+                      <span class="col-2">${dto.replier}</span>
+                      <span class="col-2">${dto.regDate} </span>
+                    </li>`
+            }
+        }
+        replyList.innerHTML = str
+    }
+
+    function printPages(data){ //페이지 목록 출력
+
+        //pagination
+        let pageStr = '';
+
+        if(data.prev) {
+            pageStr +=`<li class="page-item"><a class="page-link" data-page="${data.start-1}">PREV</a></li>`
+        }
+
+        for(let i = data.start; i <= data.end; i++){
+            pageStr +=`<li class="page-item ${i == data.page?"active":""} "><a class="page-link" data-page="${i}">${i}</a></li>`
+        }
+
+        if(data.next) {
+            pageStr +=`<li class="page-item"><a class="page-link" data-page="${data.end +1}">NEXT</a></li>`
+        }
+        replyPaging.innerHTML = pageStr
+    }
+
+    function printReplies(page,size,goLast){
+
+        getList({bno, page,size, goLast}).then(
+            data => {
+                printList(data.dtoList) //목록 처리
+                printPages(data) //페이지 처리
+            }
+        ).catch(e => {
+            console.error(e)
+        })
+
+    }
+
+    printReplies(1,10, true)
+
+    //댓글 등록 모달
+    const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+    //registerModel
+    const registerBtn = document.querySelector(".registerBtn")
+    const replyText = document.querySelector(".replyText")
+    const replier = document.querySelector(".replier")
+    const closeRegisterBtn = document.querySelector(".closeRegisterBtn")
+
+    document.querySelector(".addReplyBtn").addEventListener("click", function (e){
+        registerModal.show()
+    },false)
+
+    closeRegisterBtn.addEventListener("click", function (e){
+        registerModal.hide()
+    },false)
+
+    registerBtn.addEventListener("click", function(e){
+        const replyObj = {
+            bno:bno,
+            replyText:replyText.value,
+            replyer:replyer.value}
+
+        addReply(replyObj).then(result => {
+            alert(result.rno)
+            registerModal.hide()
+            replyText.value = ''
+            replyer.value =''
+            printReplies(1,10, true) //댓글 목록 갱신
+        }).catch(e => {
+            alert("Exception...")
+        })
+    }, false)
+
+
 
     const errors = [[${errors}]]
     console.log(errors)
@@ -144,4 +281,7 @@
                 console.error('Error:', error);
             });
     }
+
+
+
 </script>

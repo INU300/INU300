@@ -8,12 +8,11 @@ import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.service.BoardService;
 import com.sw300.community.board.service.ExternalService;
+import com.sw300.community.common.service.EmailService;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
 import javax.validation.Valid;
-
-import com.sw300.community.common.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -75,6 +74,17 @@ public class BoardApiController {
         }
     }
 
+    // 위로의 메시지 테스트
+    @PostMapping("/api/encouragement")
+    public ResponseEntity<String> encouragement (@RequestBody Map<String, String> requestData) {
+        try {
+            String result = externalService.giveEncouragement(requestData.get("title"), requestData.get("contents"));
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+        }
+    }
+
     // 게시글 추가
     @PostMapping("/board/register")
     public String registerPost(@Valid @ModelAttribute BoardInput boardInput, Principal principal,
@@ -96,22 +106,24 @@ public class BoardApiController {
         // 폭력성 판단
         String title = boardInput.getTitle();
         String contents = boardInput.getContents();
-        String category = "";
         String violence = externalService.hasViolence(title, contents);
 
-        //메일 전송
-        String text="";//위로의 텍스트
-        if(violence.equals("1")){
-            String imageUrl = externalService.generateImage(title,contents);
-            emailService.sendMail(principal.getName(),imageUrl,text);
-        }
+        String category = "";
+        String message = "";
+        String imageUrl = "";
 
-        // 카테고리 분류
+        // 유해성 분류 이후
         if (Objects.equals(violence, "1")) {
             category = "쓰레기통";
+            message = externalService.giveEncouragement(title, contents);
+            imageUrl = externalService.generateImage(title, contents);
+
+            emailService.sendMail(principal.getName(),imageUrl,message);
+
         } else if (Objects.equals(violence, "0")) {
             category = externalService.classifyContent(title, contents);
         }
+
         boardInput.setCategory(category);
 
         // boardInput 데이터 이용
