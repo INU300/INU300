@@ -36,7 +36,7 @@ public class MessageApiController {
     }
 
     @ApiOperation(value = "수신 쪽지 삭제", notes = "선택한 수신 쪽지를 삭제합니다")
-    @PostMapping("api/message/received/{id}")
+    @DeleteMapping("api/message/received/{id}")
     public ResponseDto<?> deleteReceivedMessage(@PathVariable("id") Long id, Principal principal) {
 
         Member member = memberService.getMember(principal.getName());
@@ -47,7 +47,7 @@ public class MessageApiController {
     }
 
     @ApiOperation(value = "송신 쪽지 삭제", notes = "선택한 송신 쪽지를 삭제합니다")
-    @PostMapping("api/message/sent/{id}")
+    @DeleteMapping("api/message/sent/{id}")
     public ResponseDto<?> deleteSentMessage(@PathVariable("id") Long id, Principal principal) {
 
         Member member = memberService.getMember(principal.getName());
@@ -55,5 +55,16 @@ public class MessageApiController {
         messageService.deleteMessageBySender(id, member);
 
         return new ResponseDto<>(HttpStatus.NO_CONTENT, "쪽지를 성공적으로 삭제했습니다");
+    }
+
+    @ApiOperation(value = "쪽지 읽음 처리", notes = "선택한 쪽지를 읽음으로 처리합니다")
+    @PutMapping("api/message/received/{id}")
+    public ResponseDto<?> ReceivedMessage(@PathVariable("id") Long id, Principal principal) {
+
+        Member member = memberService.getMember(principal.getName());
+
+        messageService.setReadReceipt(id, member);
+
+        return new ResponseDto<>(HttpStatus.CREATED, "쪽지를 성공적으로 읽음 처리했습니다");
     }
 }
