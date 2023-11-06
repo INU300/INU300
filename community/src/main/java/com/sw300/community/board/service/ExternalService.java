@@ -17,5 +17,11 @@ public interface ExternalService {
      * 폭력성 여부 gpt
      */
     String hasViolence(String title, String contents);
+
+    /**
+     * 위로의 메시지 gpt
+     */
+    String giveEncouragement(String title, String contents);
+
 }
 
