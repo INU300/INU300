@@ -123,24 +123,5 @@ public class ReplyApiController {
         return ResponseResult.result(result);
     }
 
-    // 댓글 조회 기능
-//    @GetMapping("/api/reply/{id}")
-//    public ResponseEntity<?> getReply(@PathVariable Long id) {
-//        ServiceResult<Reply> result = replyService.getReplyById(id);
-//        if (result.isFail()) {
-//            return ResponseEntity.badRequest().body(result.getMessage());
-//        }
-//        return ResponseEntity.ok(result.getData());
-//    }
-
-    // 글에 대한 모든 댓글 목록
-//    @GetMapping("/api/board/{boardId}/replies")
-//    public ResponseEntity<?> getRepliesByBoardId(@PathVariable Long boardId, Pageable pageable) {
-//        ServiceResult<Page<Reply>> result = replyService.getRepliesByBoardId(boardId, pageable);
-//        if (result.isFail()) {
-//            return ResponseEntity.badRequest().body(result.getMessage());
-//        }
-//        return ResponseEntity.ok(result.getData());
-//    }
 
 }

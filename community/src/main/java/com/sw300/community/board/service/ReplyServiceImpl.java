@@ -2,7 +2,6 @@ package com.sw300.community.board.service;
 
 
 import com.sw300.community.board.common.ServiceResult;
-import com.sw300.community.board.dto.BoardDTO;
 import com.sw300.community.board.dto.PageRequestDTO;
 import com.sw300.community.board.dto.PageResponseDTO;
 import com.sw300.community.board.dto.ReplyDTO;
@@ -63,12 +62,6 @@ public class ReplyServiceImpl implements ReplyService {
 
         Optional<Reply> optionalReply = replyRepository.findById(replyDTO.getRno());
         Reply reply = optionalReply.orElseThrow();
-
-        Optional<Member> OptionalMember = memberRepository.findByEmail(replyDTO.getReplier());
-        Member member = OptionalMember.orElseThrow();
-
-        Optional<Board> optionalBoard = boardRepository.findById(replyDTO.getBno());
-        Board board = optionalBoard.orElseThrow();
 
         reply.setContents(replyDTO.getReplyText());
         reply.setUpdateDate(LocalDateTime.now());
@@ -151,11 +144,6 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
 
-
-
-
-
-
     @Override
     public ServiceResult setReplyLike(Long id, String email, LikeStatus status) {
 
@@ -197,29 +185,5 @@ public class ReplyServiceImpl implements ReplyService {
         return ServiceResult.success();
     }
 
-
-
-//    @Override
-//    public ServiceResult<Reply> getReplyById(Long id) {
-//
-//        Reply reply = replyRepository.findById(id).orElse(null);
-//        if (reply == null) {
-//            return ServiceResult.fail("댓글을 찾을 수 없습니다.");
-//        }
-//        return ServiceResult.success(reply);
-//
-//    }
-
-//    @Override
-//    public ServiceResult<Page<Reply>> getRepliesByBoardId(Long boardId, Pageable pageable) {
-//
-//        Page<Reply> replies = replyRepository.findByBoardId(boardId, pageable);
-//
-//        if (replies.isEmpty()) {
-//            return ServiceResult.fail("해당 게시글에는 댓글이 없습니다.");
-//        }
-//        return ServiceResult.success(replies);
-//
-//    }
 
 }

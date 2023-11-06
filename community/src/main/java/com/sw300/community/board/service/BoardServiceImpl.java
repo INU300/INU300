@@ -2,15 +2,12 @@ package com.sw300.community.board.service;
 
 
 import com.sw300.community.board.common.ServiceResult;
-import com.sw300.community.board.dto.BoardDTO;
 import com.sw300.community.board.dto.BoardInput;
 import com.sw300.community.board.dto.BoardOutput;
 import com.sw300.community.board.enums.LikeStatus;
 import com.sw300.community.board.model.Board;
 import com.sw300.community.board.model.BoardHits;
 import com.sw300.community.board.model.BoardLike;
-import com.sw300.community.board.model.Reply;
-import com.sw300.community.board.model.ReplyLike;
 import com.sw300.community.board.repository.BoardHitsRepository;
 import com.sw300.community.board.repository.BoardLikeRepository;
 import com.sw300.community.board.repository.BoardRepository;
