@@ -46,7 +46,8 @@ public class ExternalServiceImpl implements ExternalService {
             // 시스템 메시지
             JSONObject systemMessage = new JSONObject();
             systemMessage.put("role", "system");
-            systemMessage.put("content", "대답은 무슨게시판 이렇게 무슨 게시판인지 단어만 말해줘. 다른 말은 하지 말고.");
+            systemMessage.put("content", "대답은 무슨게시판 이렇게 무슨 게시판인지 한 단어만 말해줘. "
+                    + "다른 말은 하지 말고 한 개의 게시판만 선정해서 무슨 게시판인지 말해줘.");
             messages.put(systemMessage);
 
             List<String> mainCategoryNames = categoryRepository.findAllMainCategoryNames();
