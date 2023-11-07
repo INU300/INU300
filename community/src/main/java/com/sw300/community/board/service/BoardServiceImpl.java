@@ -222,7 +222,7 @@ public class BoardServiceImpl implements BoardService {
         String keyword = pageRequestDto.getKeyword();
         Pageable pageable = pageRequestDto.getPageable("id");
         List<Long> cnoList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < favoriteList.size(); i++) {
             String name = favoriteList.get(i).getName();
             cnoList.add(categoryRepository.findByName(name).get().getCno());
         }

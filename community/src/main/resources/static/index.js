@@ -6,11 +6,11 @@ var main = {
         });
     },
     join: function () {
-        var selectedCheckboxes = $('.category-checkbox:checked');
+        /*var selectedCheckboxes = $('.category-checkbox:checked');
         if (selectedCheckboxes.length !== 5) {
             alert('5개의 카테고리를 선택해야 합니다.');
             return false; // 폼 제출을 중지
-        }
+        }*/
         var selectedCategories = $('input[name="categories"]:checked').map(function () {
             return $(this).val();
         }).get();
