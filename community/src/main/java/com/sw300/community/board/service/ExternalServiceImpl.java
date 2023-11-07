@@ -93,12 +93,12 @@ public class ExternalServiceImpl implements ExternalService {
 
             // JSON 요청 본문 생성
             JSONObject json = new JSONObject();
+            json.put("model", "dall-e-3");
             json.put("prompt", "제목은 \"" + title +
                     "\"이고, 내용은 \"" + contents + "\"이야. "
-                    + "I want to edify the person who wrote this violent article. "
-                    + "Draw a picture that will lighten the writer's mood and make him feel better.");
+                    + "이 글을 쓴 사람에게 위로와 격려를 주는 그림을 그려줘. 글쓴이의 감정을 편안하게 좋은 상태로 해줄 수 있는 그림 그려줘.");
             json.put("n", 1);
-            json.put("size", "512x512");
+            json.put("size", "1024x1024");
 
             // JSON으로 변환된 요청 본문을 StringEntity로 변환
             StringEntity entity = new StringEntity(json.toString(), "UTF-8");
