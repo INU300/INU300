@@ -23,7 +23,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $("#closeButton").click(function(){
+            $("#closeButton").click(function(event){
                 $("#popup").fadeOut();
                 const messageJson = event.target.getAttribute("messageDto");
                 const messageDto = JSON.parse(messageJson);
