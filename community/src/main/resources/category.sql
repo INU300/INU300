@@ -9,8 +9,9 @@ INSERT INTO Categories (cno, name) VALUES
 (0, '쓰레기통');
 INSERT INTO Categories (name) VALUES
 ('유머게시판'),
+('일상게시판'),
 ('고민게시판'),
-('썰게시판'),
+('연애게시판'),
 ('취업게시판'),
 ('방송게시판'),
 ('스포츠게시판'),
