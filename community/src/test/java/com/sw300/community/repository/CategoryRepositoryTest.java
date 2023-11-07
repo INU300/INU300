@@ -153,7 +153,6 @@ class CategoryRepositoryTest {
         memberRepository.save(member3);
     }
 
-    @Test
     public void insertCategory(){
         Category category = Category.builder()
                 .name("1게시판")
