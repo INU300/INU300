@@ -86,11 +86,9 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();  // 괄호 (
 
-        booleanBuilder.or(board.category.cno.eq(cnoList.get(0)));
-        booleanBuilder.or(board.category.cno.eq(cnoList.get(1)));
-        booleanBuilder.or(board.category.cno.eq(cnoList.get(2)));
-        booleanBuilder.or(board.category.cno.eq(cnoList.get(3)));
-        booleanBuilder.or(board.category.cno.eq(cnoList.get(4)));
+        for(int i = 0; i< cnoList.size();i++){
+            booleanBuilder.or(board.category.cno.eq(cnoList.get(i)));
+        }
 
         query.where(booleanBuilder);
 
