@@ -76,6 +76,46 @@
         </div><!-- end col-->
     </div><!-- end row-->
 
+    <div class="modal modModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">글 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">글 수정이 완료되었습니다.</span>
+                        <input type="text" class="form-control boardText">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark modClose">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--    글 수정 시 모달창-->
+    <div class="modal modModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">글 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">글 수정이 완료되었습니다.</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark modCloseBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="my-4 ">
@@ -126,15 +166,17 @@
                         <span class="input-group-text">Reply Text</span>
                         <input type="text" class="form-control modifyText">
                     </div>
+
                     <div class="input-group mb-3">
                         <span class="input-group-text">추천 수</span>
-                        <span class="likeCount">   0   </span>
+                        <input type="text" class="form-control replyLikeCount" value="0" readonly>
                     </div>
 
                     <div class="input-group mb-3">
                         <span class="input-group-text">비추천 수</span>
-                        <span class="dislikeCount">   0   </span>
+                        <input type="text" class="form-control replyDislikeCount" value="0" readonly>
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-info modifyBtn">수정</button>
@@ -155,12 +197,14 @@
                 <div class="modal-body">
                     <div class="input-group mb-3">
                         <span class="input-group-text">Reply Text</span>
-                        <input type="text" class="form-control modifyText" readonly>
+                        <input type="text" class="form-control readText" readonly>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success likeBtn">추천 <span class="likeCount">0</span></button>
-                    <button type="button" class="btn btn-warning dislikeBtn">비추천 <span class="dislikeCount">0</span></button>
+                    <button type="button" class="btn btn-success likeBtn">추천 <span class="replyLikeCount">0</span>
+                    </button>
+                    <button type="button" class="btn btn-warning dislikeBtn">비추천 <span
+                            class="replyDislikeCount">0</span></button>
                     <button type="button" class="btn btn-outline-dark closeLikeBtn">Close</button>
                 </div>
             </div>
@@ -329,27 +373,38 @@
             const dislikePromise = getReplyLike(reply.rno, 'DISLIKE');
 
             Promise.all([likePromise, dislikePromise]).then(values => {
-                const likeCount = values[0].data;      // API로부터 받은 추천수
-                const dislikeCount = values[1].data;   // API로부터 받은 비추천수
+                console.log(values)
 
-                document.querySelector(".likeCount").innerText = likeCount;
-                document.querySelector(".dislikeCount").innerText = dislikeCount;
+                const replyLikeCountValue = values[0].data; // API로부터 받은 추천수
+                const replyDislikeCountValue = values[1].data; // API로부터 받은 비추천수
+
+                document.querySelectorAll(".replyLikeCount").forEach(elem => {
+                    elem.value = replyLikeCountValue;
+                    elem.innerText = replyLikeCountValue;
+                });
+
+                document.querySelectorAll(".replyDislikeCount").forEach(elem => {
+                    elem.value = replyDislikeCountValue;
+                    elem.innerText = replyDislikeCountValue;
+                });
+
+                // 선택된 댓글의 작성자가 현재 로그인한 사용자와 같은지 확인
+                if (reply.replier === nickname) {
+                    // 수정 모달창
+                    modifyModal.show();
+                } else {
+                    // 추천 모달창
+                    document.querySelector('.readText').value = reply.replyText;
+                    likeModal.show();
+                }
+
             }).catch(error => {
                 console.error('추천 수 가져오는 중 오류 발생', error);
             });
 
-            // 선택된 댓글의 작성자가 현재 로그인한 사용자와 같은지 확인
-            if (reply.replier === nickname) {
-                // 수정 모달창
-                modifyModal.show();
-            } else {
-                // 추천 모달창
-                likeModal.show();
-            }
-
         }).catch(e => alert('error'))
 
-    },false)
+    }, false)
 
     //댓글 수정
     modifyBtn.addEventListener("click", function (e) {
@@ -470,10 +525,17 @@
     });
 
     const result = [[${result}]];
-    const modal = new bootstrap.Modal(document.querySelector(".modal"))
+    const modModal = new bootstrap.Modal(document.querySelector(".modModal"))
+    const modCloseBtn = document.querySelector(".modCloseBtn")
     if (result) {
-        modal.show()
+        modModal.show()
     }
+
+    modCloseBtn.addEventListener("click", function (e) {
+
+        modModal.hide()
+
+    }, false)
 
     function handleLikeDislike(status) {
         const id = [[${dto.id}]];      // Thymeleaf 모델에서 글 ID 사용

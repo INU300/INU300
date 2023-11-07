@@ -150,7 +150,7 @@ public class ExternalServiceImpl implements ExternalService {
             userMessage.put("role", "user");
             userMessage.put("content", "제목은 " + title +
                     "이고, 내용은 " + contents +
-                    "이야. 이 글의 유해성, 폭력성을 5단계로 분석해서 4단계 이상에 해당하는지 판단해줘. 4단계 이상이면 1, 아니면 0으로 대답해줘.");
+                    "이야. 이 글의 폭력성을 5단계로 분석해서 4단계 이상에 해당하는지 판단해줘. 4단계 이상이면 1, 아니면 0으로 대답해줘.");
             messages.put(userMessage);
 
             System.out.println("Messages: " + messages.toString());
